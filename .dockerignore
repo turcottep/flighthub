@@ -1,0 +1,9 @@
+.git
+.laravel-scaffold
+node_modules
+vendor
+storage/logs/*
+public/build
+public/hot
+.env
+.DS_Store

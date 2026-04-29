@@ -1,0 +1,3002 @@
+{
+    "airlines": [
+        {
+            "code": "AC",
+            "name": "Air Canada"
+        }
+    ],
+    "airports": [
+        {
+            "code": "YAM",
+            "city_code": "YAM",
+            "name": "Sault Ste Marie",
+            "city": "Sault Sainte Marie",
+            "country_code": "CA",
+            "region_code": "ON",
+            "latitude": 46.48500061035156,
+            "longitude": -84.5093994140625,
+            "timezone": "America/Toronto"
+        },
+        {
+            "code": "YBC",
+            "city_code": "YBC",
+            "name": "Baie Comeau",
+            "city": "Baie Comeau",
+            "country_code": "CA",
+            "region_code": "QC",
+            "latitude": 49.13249969482422,
+            "longitude": -68.20439910888672,
+            "timezone": "America/Toronto"
+        },
+        {
+            "code": "YBG",
+            "city_code": "YBG",
+            "name": "CFB Bagotville",
+            "city": "Bagotville",
+            "country_code": "CA",
+            "region_code": "QC",
+            "latitude": 48.33060073852539,
+            "longitude": -70.99639892578125,
+            "timezone": "America/Toronto"
+        },
+        {
+            "code": "YBL",
+            "city_code": "YBL",
+            "name": "Campbell River",
+            "city": "Campbell River",
+            "country_code": "CA",
+            "region_code": "BC",
+            "latitude": 49.950801849365234,
+            "longitude": -125.27100372314453,
+            "timezone": "America/Vancouver"
+        },
+        {
+            "code": "YCD",
+            "city_code": "YCD",
+            "name": "Nanaimo",
+            "city": "Nanaimo",
+            "country_code": "CA",
+            "region_code": "BC",
+            "latitude": 49.054970224899996,
+            "longitude": -123.869862556,
+            "timezone": "America/Vancouver"
+        },
+        {
+            "code": "YCG",
+            "city_code": "YCG",
+            "name": "Castlegar/West Kootenay Regional",
+            "city": "Castlegar",
+            "country_code": "CA",
+            "region_code": "BC",
+            "latitude": 49.2963981628,
+            "longitude": -117.632003784,
+            "timezone": "America/Vancouver"
+        },
+        {
+            "code": "YDF",
+            "city_code": "YDF",
+            "name": "Deer Lake",
+            "city": "Deer Lake",
+            "country_code": "CA",
+            "region_code": "NL",
+            "latitude": 49.21080017089844,
+            "longitude": -57.39139938354492,
+            "timezone": "America/St_Johns"
+        },
+        {
+            "code": "YEG",
+            "city_code": "YEG",
+            "name": "Edmonton International",
+            "city": "Edmonton",
+            "country_code": "CA",
+            "region_code": "AB",
+            "latitude": 53.309700012200004,
+            "longitude": -113.580001831,
+            "timezone": "America/Edmonton"
+        },
+        {
+            "code": "YFC",
+            "city_code": "YFC",
+            "name": "Fredericton",
+            "city": "Fredericton",
+            "country_code": "CA",
+            "region_code": "NB",
+            "latitude": 45.868900299072266,
+            "longitude": -66.53720092773438,
+            "timezone": "America/Halifax"
+        },
+        {
+            "code": "YGK",
+            "city_code": "YGK",
+            "name": "Kingston Norman Rogers",
+            "city": "Kingston",
+            "country_code": "CA",
+            "region_code": "ON",
+            "latitude": 44.22529983520508,
+            "longitude": -76.5969009399414,
+            "timezone": "America/Toronto"
+        },
+        {
+            "code": "YGP",
+            "city_code": "YGP",
+            "name": "Gasp\u00e9 (Michel-Pouliot)",
+            "city": "Gaspe",
+            "country_code": "CA",
+            "region_code": "QC",
+            "latitude": 48.7752990723,
+            "longitude": -64.4785995483,
+            "timezone": "America/Toronto"
+        },
+        {
+            "code": "YGR",
+            "city_code": "YGR",
+            "name": "\u00celes-de-la-Madeleine",
+            "city": "Iles De La Madeleine",
+            "country_code": "CA",
+            "region_code": "QC",
+            "latitude": 47.42470169067383,
+            "longitude": -61.778099060058594,
+            "timezone": "America/Toronto"
+        },
+        {
+            "code": "YHZ",
+            "city_code": "YHZ",
+            "name": "Stanfield International",
+            "city": "Halifax",
+            "country_code": "CA",
+            "region_code": "NS",
+            "latitude": 44.8807983398,
+            "longitude": -63.5085983276,
+            "timezone": "America/Halifax"
+        },
+        {
+            "code": "YKA",
+            "city_code": "YKA",
+            "name": "Kamloops",
+            "city": "Kamloops",
+            "country_code": "CA",
+            "region_code": "BC",
+            "latitude": 50.7022018433,
+            "longitude": -120.444000244,
+            "timezone": "America/Vancouver"
+        },
+        {
+            "code": "YLW",
+            "city_code": "YLW",
+            "name": "Kelowna International",
+            "city": "Kelowna",
+            "country_code": "CA",
+            "region_code": "BC",
+            "latitude": 49.9561004639,
+            "longitude": -119.377998352,
+            "timezone": "America/Vancouver"
+        },
+        {
+            "code": "YMM",
+            "city_code": "YMM",
+            "name": "Fort McMurray",
+            "city": "Fort Mcmurray",
+            "country_code": "CA",
+            "region_code": "AB",
+            "latitude": 56.653301239,
+            "longitude": -111.222000122,
+            "timezone": "America/Edmonton"
+        },
+        {
+            "code": "YOW",
+            "city_code": "YOW",
+            "name": "Ottawa Macdonald-Cartier International",
+            "city": "Ottawa",
+            "country_code": "CA",
+            "region_code": "ON",
+            "latitude": 45.3224983215332,
+            "longitude": -75.66919708251953,
+            "timezone": "America/Toronto"
+        },
+        {
+            "code": "YPR",
+            "city_code": "YPR",
+            "name": "Prince Rupert",
+            "city": "Prince Pupert",
+            "country_code": "CA",
+            "region_code": "BC",
+            "latitude": 54.286098480199996,
+            "longitude": -130.445007324,
+            "timezone": "America/Vancouver"
+        },
+        {
+            "code": "YQB",
+            "city_code": "YQB",
+            "name": "Quebec Jean Lesage International",
+            "city": "Quebec",
+            "country_code": "CA",
+            "region_code": "QC",
+            "latitude": 46.7911,
+            "longitude": -71.393303,
+            "timezone": "America/Toronto"
+        },
+        {
+            "code": "YQF",
+            "city_code": "YQF",
+            "name": "Red Deer Regional",
+            "city": "Red Deer Industrial",
+            "country_code": "CA",
+            "region_code": "AB",
+            "latitude": 52.18220138549805,
+            "longitude": -113.89399719238281,
+            "timezone": "America/Edmonton"
+        },
+        {
+            "code": "YQG",
+            "city_code": "YQG",
+            "name": "Windsor",
+            "city": "Windsor",
+            "country_code": "CA",
+            "region_code": "ON",
+            "latitude": 42.27560043334961,
+            "longitude": -82.95559692382812,
+            "timezone": "America/Toronto"
+        },
+        {
+            "code": "YQL",
+            "city_code": "YQL",
+            "name": "Lethbridge County",
+            "city": "Lethbridge",
+            "country_code": "CA",
+            "region_code": "AB",
+            "latitude": 49.6302986145,
+            "longitude": -112.800003052,
+            "timezone": "America/Edmonton"
+        },
+        {
+            "code": "YQM",
+            "city_code": "YQM",
+            "name": "Greater Moncton International",
+            "city": "Moncton",
+            "country_code": "CA",
+            "region_code": "NB",
+            "latitude": 46.11220169067383,
+            "longitude": -64.67859649658203,
+            "timezone": "America/Halifax"
+        },
+        {
+            "code": "YQQ",
+            "city_code": "YQQ",
+            "name": "Comox",
+            "city": "Comox",
+            "country_code": "CA",
+            "region_code": "BC",
+            "latitude": 49.71080017089844,
+            "longitude": -124.88700103759766,
+            "timezone": "America/Vancouver"
+        },
+        {
+            "code": "YQR",
+            "city_code": "YQR",
+            "name": "Regina International",
+            "city": "Regina",
+            "country_code": "CA",
+            "region_code": "SK",
+            "latitude": 50.43190002441406,
+            "longitude": -104.66600036621094,
+            "timezone": "America/Regina"
+        },
+        {
+            "code": "YQT",
+            "city_code": "YQT",
+            "name": "Thunder Bay",
+            "city": "Thunder Bay",
+            "country_code": "CA",
+            "region_code": "ON",
+            "latitude": 48.37189865112305,
+            "longitude": -89.32389831542969,
+            "timezone": "America/Toronto"
+        },
+        {
+            "code": "YQU",
+            "city_code": "YQU",
+            "name": "Grande Prairie",
+            "city": "Grande Prairie",
+            "country_code": "CA",
+            "region_code": "AB",
+            "latitude": 55.1796989441,
+            "longitude": -118.885002136,
+            "timezone": "America/Edmonton"
+        },
+        {
+            "code": "YQX",
+            "city_code": "YQX",
+            "name": "Gander International",
+            "city": "Gander",
+            "country_code": "CA",
+            "region_code": "NL",
+            "latitude": 48.9369010925293,
+            "longitude": -54.56809997558594,
+            "timezone": "America/St_Johns"
+        },
+        {
+            "code": "YQY",
+            "city_code": "YQY",
+            "name": "J.A. Douglas McCurdy",
+            "city": "Sydney",
+            "country_code": "CA",
+            "region_code": "NS",
+            "latitude": 46.1614,
+            "longitude": -60.047798,
+            "timezone": "America/Halifax"
+        },
+        {
+            "code": "YQZ",
+            "city_code": "YQZ",
+            "name": "Quesnel",
+            "city": "Quesnel",
+            "country_code": "CA",
+            "region_code": "BC",
+            "latitude": 53.026100158691406,
+            "longitude": -122.51000213623047,
+            "timezone": "America/Vancouver"
+        },
+        {
+            "code": "YSB",
+            "city_code": "YSB",
+            "name": "Sudbury",
+            "city": "Sudbury",
+            "country_code": "CA",
+            "region_code": "ON",
+            "latitude": 46.625,
+            "longitude": -80.79889678955078,
+            "timezone": "America/Toronto"
+        },
+        {
+            "code": "YSJ",
+            "city_code": "YSJ",
+            "name": "Saint John",
+            "city": "St. John",
+            "country_code": "CA",
+            "region_code": "NB",
+            "latitude": 45.31610107421875,
+            "longitude": -65.89029693603516,
+            "timezone": "America/Halifax"
+        },
+        {
+            "code": "YTS",
+            "city_code": "YTS",
+            "name": "Timmins/Victor M. Power",
+            "city": "Timmins",
+            "country_code": "CA",
+            "region_code": "ON",
+            "latitude": 48.569698333699996,
+            "longitude": -81.376701355,
+            "timezone": "America/Toronto"
+        },
+        {
+            "code": "YTZ",
+            "city_code": "YTO",
+            "name": "Billy Bishop Toronto City Centre",
+            "city": "Toronto",
+            "country_code": "CA",
+            "region_code": "ON",
+            "latitude": 43.627499,
+            "longitude": -79.396202,
+            "timezone": "America/Toronto"
+        },
+        {
+            "code": "YUL",
+            "city_code": "YMQ",
+            "name": "Pierre Elliott Trudeau International",
+            "city": "Montreal",
+            "country_code": "CA",
+            "region_code": "QC",
+            "latitude": 45.4706001282,
+            "longitude": -73.7407989502,
+            "timezone": "America/Montreal"
+        },
+        {
+            "code": "YUY",
+            "city_code": "YUY",
+            "name": "Rouyn Noranda",
+            "city": "Rouyn",
+            "country_code": "CA",
+            "region_code": "QC",
+            "latitude": 48.20610046386719,
+            "longitude": -78.83560180664062,
+            "timezone": "America/Toronto"
+        },
+        {
+            "code": "YVO",
+            "city_code": "YVO",
+            "name": "Val-d'Or",
+            "city": "Val D'or",
+            "country_code": "CA",
+            "region_code": "QC",
+            "latitude": 48.0532989502,
+            "longitude": -77.7827987671,
+            "timezone": "America/Toronto"
+        },
+        {
+            "code": "YVR",
+            "city_code": "YVR",
+            "name": "Vancouver International",
+            "city": "Vancouver",
+            "country_code": "CA",
+            "region_code": "BC",
+            "latitude": 49.193901062,
+            "longitude": -123.183998108,
+            "timezone": "America/Vancouver"
+        },
+        {
+            "code": "YWG",
+            "city_code": "YWG",
+            "name": "James Armstrong Richardson International",
+            "city": "Winnipeg",
+            "country_code": "CA",
+            "region_code": "MB",
+            "latitude": 49.909999847399995,
+            "longitude": -97.2398986816,
+            "timezone": "America/Winnipeg"
+        },
+        {
+            "code": "YWK",
+            "city_code": "YWK",
+            "name": "Wabush",
+            "city": "Wabush",
+            "country_code": "CA",
+            "region_code": "NL",
+            "latitude": 52.92190170288086,
+            "longitude": -66.8644027709961,
+            "timezone": "America/Halifax"
+        },
+        {
+            "code": "YWL",
+            "city_code": "YWL",
+            "name": "Williams Lake",
+            "city": "Williams Lake",
+            "country_code": "CA",
+            "region_code": "BC",
+            "latitude": 52.1831016541,
+            "longitude": -122.054000854,
+            "timezone": "America/Vancouver"
+        },
+        {
+            "code": "YXC",
+            "city_code": "YXC",
+            "name": "Cranbrook/Canadian Rockies International",
+            "city": "Cranbrook",
+            "country_code": "CA",
+            "region_code": "BC",
+            "latitude": 49.610801696777,
+            "longitude": -115.78199768066,
+            "timezone": "America/Edmonton"
+        },
+        {
+            "code": "YXE",
+            "city_code": "YXE",
+            "name": "Saskatoon John G. Diefenbaker International",
+            "city": "Saskatoon",
+            "country_code": "CA",
+            "region_code": "SK",
+            "latitude": 52.170799255371094,
+            "longitude": -106.69999694824219,
+            "timezone": "America/Regina"
+        },
+        {
+            "code": "YXH",
+            "city_code": "YXH",
+            "name": "Medicine Hat",
+            "city": "Medicine Hat",
+            "country_code": "CA",
+            "region_code": "AB",
+            "latitude": 50.01890182495117,
+            "longitude": -110.72100067138672,
+            "timezone": "America/Edmonton"
+        },
+        {
+            "code": "YXJ",
+            "city_code": "YXJ",
+            "name": "Fort St John",
+            "city": "Fort Saint John",
+            "country_code": "CA",
+            "region_code": "BC",
+            "latitude": 56.23809814453125,
+            "longitude": -120.73999786376953,
+            "timezone": "America/Dawson_Creek"
+        },
+        {
+            "code": "YXS",
+            "city_code": "YXS",
+            "name": "Prince George",
+            "city": "Prince George",
+            "country_code": "CA",
+            "region_code": "BC",
+            "latitude": 53.8894004822,
+            "longitude": -122.679000854,
+            "timezone": "America/Vancouver"
+        },
+        {
+            "code": "YXT",
+            "city_code": "YXT",
+            "name": "Northwest Regional Airport Terrace-Kitimat",
+            "city": "Terrace",
+            "country_code": "CA",
+            "region_code": "BC",
+            "latitude": 54.468498,
+            "longitude": -128.576009,
+            "timezone": "America/Vancouver"
+        },
+        {
+            "code": "YXU",
+            "city_code": "YXU",
+            "name": "London",
+            "city": "London",
+            "country_code": "CA",
+            "region_code": "ON",
+            "latitude": 43.035599,
+            "longitude": -81.1539,
+            "timezone": "America/Toronto"
+        },
+        {
+            "code": "YXY",
+            "city_code": "YXY",
+            "name": "Erik Nielsen International",
+            "city": "Whitehorse",
+            "country_code": "CA",
+            "region_code": "YT",
+            "latitude": 60.7095985413,
+            "longitude": -135.067001343,
+            "timezone": "America/Vancouver"
+        },
+        {
+            "code": "YYB",
+            "city_code": "YYB",
+            "name": "North Bay Jack Garland",
+            "city": "North Bay",
+            "country_code": "CA",
+            "region_code": "ON",
+            "latitude": 46.363602,
+            "longitude": -79.422798,
+            "timezone": "America/Toronto"
+        },
+        {
+            "code": "YYC",
+            "city_code": "YYC",
+            "name": "Calgary International",
+            "city": "Calgary",
+            "country_code": "CA",
+            "region_code": "AB",
+            "latitude": 51.113899231,
+            "longitude": -114.019996643,
+            "timezone": "America/Edmonton"
+        },
+        {
+            "code": "YYD",
+            "city_code": "YYD",
+            "name": "Smithers",
+            "city": "Smithers",
+            "country_code": "CA",
+            "region_code": "BC",
+            "latitude": 54.82469940185547,
+            "longitude": -127.18299865722656,
+            "timezone": "America/Vancouver"
+        },
+        {
+            "code": "YYF",
+            "city_code": "YYF",
+            "name": "Penticton",
+            "city": "Penticton",
+            "country_code": "CA",
+            "region_code": "BC",
+            "latitude": 49.46310043334961,
+            "longitude": -119.60199737548828,
+            "timezone": "America/Vancouver"
+        },
+        {
+            "code": "YYG",
+            "city_code": "YYG",
+            "name": "Charlottetown",
+            "city": "Charlottetown",
+            "country_code": "CA",
+            "region_code": "PE",
+            "latitude": 46.290000915527344,
+            "longitude": -63.12110137939453,
+            "timezone": "America/Halifax"
+        },
+        {
+            "code": "YYJ",
+            "city_code": "YYJ",
+            "name": "Victoria International",
+            "city": "Victoria",
+            "country_code": "CA",
+            "region_code": "BC",
+            "latitude": 48.646900177,
+            "longitude": -123.426002502,
+            "timezone": "America/Vancouver"
+        },
+        {
+            "code": "YYR",
+            "city_code": "YYR",
+            "name": "Goose Bay",
+            "city": "Goose Bay",
+            "country_code": "CA",
+            "region_code": "NL",
+            "latitude": 53.3191986084,
+            "longitude": -60.4258003235,
+            "timezone": "America/Halifax"
+        },
+        {
+            "code": "YYT",
+            "city_code": "YYT",
+            "name": "St. John's International",
+            "city": "St. John's",
+            "country_code": "CA",
+            "region_code": "NL",
+            "latitude": 47.618598938,
+            "longitude": -52.7518997192,
+            "timezone": "America/St_Johns"
+        },
+        {
+            "code": "YYY",
+            "city_code": "YYY",
+            "name": "Mont Joli",
+            "city": "Mont Joli",
+            "country_code": "CA",
+            "region_code": "QC",
+            "latitude": 48.60860061645508,
+            "longitude": -68.20809936523438,
+            "timezone": "America/Toronto"
+        },
+        {
+            "code": "YYZ",
+            "city_code": "YTO",
+            "name": "Lester B. Pearson International",
+            "city": "Toronto",
+            "country_code": "CA",
+            "region_code": "ON",
+            "latitude": 43.6772003174,
+            "longitude": -79.63059997559999,
+            "timezone": "America/Toronto"
+        },
+        {
+            "code": "YZF",
+            "city_code": "YZF",
+            "name": "Yellowknife",
+            "city": "Yellowknife",
+            "country_code": "CA",
+            "region_code": "NT",
+            "latitude": 62.462799072265625,
+            "longitude": -114.44000244140625,
+            "timezone": "America/Edmonton"
+        },
+        {
+            "code": "YZP",
+            "city_code": "YZP",
+            "name": "Sandspit",
+            "city": "Sandspit",
+            "country_code": "CA",
+            "region_code": "BC",
+            "latitude": 53.25429916379999,
+            "longitude": -131.813995361,
+            "timezone": "America/Vancouver"
+        },
+        {
+            "code": "YZR",
+            "city_code": "YZR",
+            "name": "Chris Hadfield",
+            "city": "Sarnia",
+            "country_code": "CA",
+            "region_code": "ON",
+            "latitude": 42.9994010925293,
+            "longitude": -82.30889892578125,
+            "timezone": "America/Toronto"
+        },
+        {
+            "code": "YZV",
+            "city_code": "YZV",
+            "name": "Sept-\u00celes",
+            "city": "Sept-iles",
+            "country_code": "CA",
+            "region_code": "QC",
+            "latitude": 50.22330093383789,
+            "longitude": -66.2656021118164,
+            "timezone": "America/Toronto"
+        },
+        {
+            "code": "ZBF",
+            "city_code": "ZBF",
+            "name": "Bathurst",
+            "city": "Bathurst",
+            "country_code": "CA",
+            "region_code": "NB",
+            "latitude": 47.629699707,
+            "longitude": -65.738899231,
+            "timezone": "America/Halifax"
+        }
+    ],
+    "flights": [
+        {
+            "airline": "AC",
+            "number": "101",
+            "departure_airport": "YAM",
+            "departure_time": "07:35",
+            "arrival_airport": "YYZ",
+            "arrival_time": "08:50",
+            "price": "103.34"
+        },
+        {
+            "airline": "AC",
+            "number": "102",
+            "departure_airport": "YBC",
+            "departure_time": "07:25",
+            "arrival_airport": "YUL",
+            "arrival_time": "08:50",
+            "price": "113.12"
+        },
+        {
+            "airline": "AC",
+            "number": "103",
+            "departure_airport": "YBC",
+            "departure_time": "17:50",
+            "arrival_airport": "YYY",
+            "arrival_time": "18:25",
+            "price": "55.41"
+        },
+        {
+            "airline": "AC",
+            "number": "104",
+            "departure_airport": "YBG",
+            "departure_time": "14:05",
+            "arrival_airport": "YUL",
+            "arrival_time": "15:20",
+            "price": "90.82"
+        },
+        {
+            "airline": "AC",
+            "number": "105",
+            "departure_airport": "YBL",
+            "departure_time": "22:25",
+            "arrival_airport": "YQQ",
+            "arrival_time": "23:00",
+            "price": "53.22"
+        },
+        {
+            "airline": "AC",
+            "number": "106",
+            "departure_airport": "YCD",
+            "departure_time": "09:40",
+            "arrival_airport": "YVR",
+            "arrival_time": "10:15",
+            "price": "54.75"
+        },
+        {
+            "airline": "AC",
+            "number": "107",
+            "departure_airport": "YCG",
+            "departure_time": "05:00",
+            "arrival_airport": "YVR",
+            "arrival_time": "06:05",
+            "price": "93.34"
+        },
+        {
+            "airline": "AC",
+            "number": "108",
+            "departure_airport": "YCG",
+            "departure_time": "20:05",
+            "arrival_airport": "YYC",
+            "arrival_time": "22:15",
+            "price": "84.96"
+        },
+        {
+            "airline": "AC",
+            "number": "109",
+            "departure_airport": "YDF",
+            "departure_time": "06:05",
+            "arrival_airport": "YHZ",
+            "arrival_time": "07:05",
+            "price": "122.47"
+        },
+        {
+            "airline": "AC",
+            "number": "110",
+            "departure_airport": "YDF",
+            "departure_time": "09:35",
+            "arrival_airport": "YYR",
+            "arrival_time": "10:20",
+            "price": "104.35"
+        },
+        {
+            "airline": "AC",
+            "number": "111",
+            "departure_airport": "YDF",
+            "departure_time": "15:10",
+            "arrival_airport": "YYT",
+            "arrival_time": "16:25",
+            "price": "91.39"
+        },
+        {
+            "airline": "AC",
+            "number": "112",
+            "departure_airport": "YDF",
+            "departure_time": "20:45",
+            "arrival_airport": "YYZ",
+            "arrival_time": "21:50",
+            "price": "247.40"
+        },
+        {
+            "airline": "AC",
+            "number": "113",
+            "departure_airport": "YEG",
+            "departure_time": "13:50",
+            "arrival_airport": "YMM",
+            "arrival_time": "14:55",
+            "price": "93.11"
+        },
+        {
+            "airline": "AC",
+            "number": "114",
+            "departure_airport": "YEG",
+            "departure_time": "07:10",
+            "arrival_airport": "YOW",
+            "arrival_time": "13:00",
+            "price": "427.43"
+        },
+        {
+            "airline": "AC",
+            "number": "115",
+            "departure_airport": "YEG",
+            "departure_time": "12:30",
+            "arrival_airport": "YQR",
+            "arrival_time": "15:05",
+            "price": "124.89"
+        },
+        {
+            "airline": "AC",
+            "number": "116",
+            "departure_airport": "YEG",
+            "departure_time": "05:05",
+            "arrival_airport": "YQU",
+            "arrival_time": "06:10",
+            "price": "93.26"
+        },
+        {
+            "airline": "AC",
+            "number": "117",
+            "departure_airport": "YEG",
+            "departure_time": "22:45",
+            "arrival_airport": "YUL",
+            "arrival_time": "04:45",
+            "price": "440.56"
+        },
+        {
+            "airline": "AC",
+            "number": "118",
+            "departure_airport": "YEG",
+            "departure_time": "07:25",
+            "arrival_airport": "YVR",
+            "arrival_time": "08:10",
+            "price": "137.99"
+        },
+        {
+            "airline": "AC",
+            "number": "119",
+            "departure_airport": "YEG",
+            "departure_time": "20:15",
+            "arrival_airport": "YWG",
+            "arrival_time": "23:35",
+            "price": "179.55"
+        },
+        {
+            "airline": "AC",
+            "number": "120",
+            "departure_airport": "YEG",
+            "departure_time": "08:40",
+            "arrival_airport": "YXE",
+            "arrival_time": "10:55",
+            "price": "101.79"
+        },
+        {
+            "airline": "AC",
+            "number": "121",
+            "departure_airport": "YEG",
+            "departure_time": "09:00",
+            "arrival_airport": "YYC",
+            "arrival_time": "10:00",
+            "price": "76.06"
+        },
+        {
+            "airline": "AC",
+            "number": "122",
+            "departure_airport": "YEG",
+            "departure_time": "20:20",
+            "arrival_airport": "YYZ",
+            "arrival_time": "02:00",
+            "price": "409.80"
+        },
+        {
+            "airline": "AC",
+            "number": "123",
+            "departure_airport": "YEG",
+            "departure_time": "12:00",
+            "arrival_airport": "YZF",
+            "arrival_time": "14:05",
+            "price": "161.09"
+        },
+        {
+            "airline": "AC",
+            "number": "124",
+            "departure_airport": "YFC",
+            "departure_time": "20:10",
+            "arrival_airport": "YHZ",
+            "arrival_time": "21:10",
+            "price": "77.69"
+        },
+        {
+            "airline": "AC",
+            "number": "125",
+            "departure_airport": "YFC",
+            "departure_time": "07:20",
+            "arrival_airport": "YOW",
+            "arrival_time": "07:55",
+            "price": "127.40"
+        },
+        {
+            "airline": "AC",
+            "number": "126",
+            "departure_airport": "YFC",
+            "departure_time": "21:55",
+            "arrival_airport": "YUL",
+            "arrival_time": "22:15",
+            "price": "110.74"
+        },
+        {
+            "airline": "AC",
+            "number": "127",
+            "departure_airport": "YFC",
+            "departure_time": "10:10",
+            "arrival_airport": "YYZ",
+            "arrival_time": "11:20",
+            "price": "165.66"
+        },
+        {
+            "airline": "AC",
+            "number": "128",
+            "departure_airport": "YGK",
+            "departure_time": "19:50",
+            "arrival_airport": "YYZ",
+            "arrival_time": "20:50",
+            "price": "76.54"
+        },
+        {
+            "airline": "AC",
+            "number": "129",
+            "departure_airport": "YGP",
+            "departure_time": "20:00",
+            "arrival_airport": "YGR",
+            "arrival_time": "21:00",
+            "price": "76.56"
+        },
+        {
+            "airline": "AC",
+            "number": "130",
+            "departure_airport": "YGP",
+            "departure_time": "08:55",
+            "arrival_airport": "YQB",
+            "arrival_time": "10:15",
+            "price": "110.77"
+        },
+        {
+            "airline": "AC",
+            "number": "131",
+            "departure_airport": "YGR",
+            "departure_time": "10:20",
+            "arrival_airport": "YGP",
+            "arrival_time": "11:20",
+            "price": "76.56"
+        },
+        {
+            "airline": "AC",
+            "number": "132",
+            "departure_airport": "YHZ",
+            "departure_time": "20:10",
+            "arrival_airport": "YDF",
+            "arrival_time": "22:10",
+            "price": "122.47"
+        },
+        {
+            "airline": "AC",
+            "number": "133",
+            "departure_airport": "YHZ",
+            "departure_time": "09:55",
+            "arrival_airport": "YFC",
+            "arrival_time": "10:55",
+            "price": "77.69"
+        },
+        {
+            "airline": "AC",
+            "number": "134",
+            "departure_airport": "YHZ",
+            "departure_time": "16:15",
+            "arrival_airport": "YOW",
+            "arrival_time": "17:15",
+            "price": "154.03"
+        },
+        {
+            "airline": "AC",
+            "number": "135",
+            "departure_airport": "YHZ",
+            "departure_time": "18:30",
+            "arrival_airport": "YQM",
+            "arrival_time": "19:20",
+            "price": "67.10"
+        },
+        {
+            "airline": "AC",
+            "number": "136",
+            "departure_airport": "YHZ",
+            "departure_time": "09:05",
+            "arrival_airport": "YQX",
+            "arrival_time": "11:20",
+            "price": "138.59"
+        },
+        {
+            "airline": "AC",
+            "number": "137",
+            "departure_airport": "YHZ",
+            "departure_time": "08:15",
+            "arrival_airport": "YQY",
+            "arrival_time": "09:20",
+            "price": "82.54"
+        },
+        {
+            "airline": "AC",
+            "number": "138",
+            "departure_airport": "YHZ",
+            "departure_time": "08:35",
+            "arrival_airport": "YSJ",
+            "arrival_time": "09:30",
+            "price": "70.24"
+        },
+        {
+            "airline": "AC",
+            "number": "139",
+            "departure_airport": "YHZ",
+            "departure_time": "20:20",
+            "arrival_airport": "YUL",
+            "arrival_time": "21:05",
+            "price": "137.46"
+        },
+        {
+            "airline": "AC",
+            "number": "140",
+            "departure_airport": "YHZ",
+            "departure_time": "22:00",
+            "arrival_airport": "YYG",
+            "arrival_time": "22:50",
+            "price": "66.55"
+        },
+        {
+            "airline": "AC",
+            "number": "141",
+            "departure_airport": "YHZ",
+            "departure_time": "19:35",
+            "arrival_airport": "YYR",
+            "arrival_time": "21:35",
+            "price": "155.10"
+        },
+        {
+            "airline": "AC",
+            "number": "142",
+            "departure_airport": "YHZ",
+            "departure_time": "11:50",
+            "arrival_airport": "YYT",
+            "arrival_time": "14:10",
+            "price": "145.85"
+        },
+        {
+            "airline": "AC",
+            "number": "143",
+            "departure_airport": "YHZ",
+            "departure_time": "20:45",
+            "arrival_airport": "YYZ",
+            "arrival_time": "22:15",
+            "price": "190.71"
+        },
+        {
+            "airline": "AC",
+            "number": "144",
+            "departure_airport": "YKA",
+            "departure_time": "20:05",
+            "arrival_airport": "YVR",
+            "arrival_time": "21:05",
+            "price": "77.38"
+        },
+        {
+            "airline": "AC",
+            "number": "145",
+            "departure_airport": "YKA",
+            "departure_time": "16:20",
+            "arrival_airport": "YYC",
+            "arrival_time": "18:30",
+            "price": "98.79"
+        },
+        {
+            "airline": "AC",
+            "number": "146",
+            "departure_airport": "YLW",
+            "departure_time": "20:15",
+            "arrival_airport": "YVR",
+            "arrival_time": "21:20",
+            "price": "80.59"
+        },
+        {
+            "airline": "AC",
+            "number": "147",
+            "departure_airport": "YLW",
+            "departure_time": "19:50",
+            "arrival_airport": "YYC",
+            "arrival_time": "22:10",
+            "price": "92.98"
+        },
+        {
+            "airline": "AC",
+            "number": "148",
+            "departure_airport": "YMM",
+            "departure_time": "15:40",
+            "arrival_airport": "YEG",
+            "arrival_time": "16:45",
+            "price": "93.11"
+        },
+        {
+            "airline": "AC",
+            "number": "149",
+            "departure_airport": "YMM",
+            "departure_time": "10:25",
+            "arrival_airport": "YVR",
+            "arrival_time": "11:40",
+            "price": "175.56"
+        },
+        {
+            "airline": "AC",
+            "number": "150",
+            "departure_airport": "YMM",
+            "departure_time": "18:00",
+            "arrival_airport": "YYC",
+            "arrival_time": "19:30",
+            "price": "119.68"
+        },
+        {
+            "airline": "AC",
+            "number": "151",
+            "departure_airport": "YMM",
+            "departure_time": "16:40",
+            "arrival_airport": "YYZ",
+            "arrival_time": "22:15",
+            "price": "404.09"
+        },
+        {
+            "airline": "AC",
+            "number": "152",
+            "departure_airport": "YOW",
+            "departure_time": "13:00",
+            "arrival_airport": "YEG",
+            "arrival_time": "14:50",
+            "price": "427.43"
+        },
+        {
+            "airline": "AC",
+            "number": "153",
+            "departure_airport": "YOW",
+            "departure_time": "09:10",
+            "arrival_airport": "YFC",
+            "arrival_time": "11:45",
+            "price": "127.40"
+        },
+        {
+            "airline": "AC",
+            "number": "154",
+            "departure_airport": "YOW",
+            "departure_time": "18:40",
+            "arrival_airport": "YHZ",
+            "arrival_time": "21:40",
+            "price": "154.03"
+        },
+        {
+            "airline": "AC",
+            "number": "155",
+            "departure_airport": "YOW",
+            "departure_time": "05:10",
+            "arrival_airport": "YQB",
+            "arrival_time": "06:25",
+            "price": "89.49"
+        },
+        {
+            "airline": "AC",
+            "number": "156",
+            "departure_airport": "YOW",
+            "departure_time": "05:55",
+            "arrival_airport": "YQM",
+            "arrival_time": "08:45",
+            "price": "143.28"
+        },
+        {
+            "airline": "AC",
+            "number": "157",
+            "departure_airport": "YOW",
+            "departure_time": "09:45",
+            "arrival_airport": "YUL",
+            "arrival_time": "10:35",
+            "price": "65.66"
+        },
+        {
+            "airline": "AC",
+            "number": "158",
+            "departure_airport": "YOW",
+            "departure_time": "08:25",
+            "arrival_airport": "YVR",
+            "arrival_time": "10:05",
+            "price": "504.72"
+        },
+        {
+            "airline": "AC",
+            "number": "159",
+            "departure_airport": "YOW",
+            "departure_time": "07:15",
+            "arrival_airport": "YWG",
+            "arrival_time": "08:45",
+            "price": "234.74"
+        },
+        {
+            "airline": "AC",
+            "number": "160",
+            "departure_airport": "YOW",
+            "departure_time": "19:20",
+            "arrival_airport": "YXU",
+            "arrival_time": "20:35",
+            "price": "104.63"
+        },
+        {
+            "airline": "AC",
+            "number": "161",
+            "departure_airport": "YOW",
+            "departure_time": "14:40",
+            "arrival_airport": "YYC",
+            "arrival_time": "16:35",
+            "price": "430.64"
+        },
+        {
+            "airline": "AC",
+            "number": "162",
+            "departure_airport": "YOW",
+            "departure_time": "10:35",
+            "arrival_airport": "YYT",
+            "arrival_time": "14:40",
+            "price": "243.36"
+        },
+        {
+            "airline": "AC",
+            "number": "163",
+            "departure_airport": "YOW",
+            "departure_time": "10:00",
+            "arrival_airport": "YYZ",
+            "arrival_time": "11:15",
+            "price": "88.99"
+        },
+        {
+            "airline": "AC",
+            "number": "164",
+            "departure_airport": "YPR",
+            "departure_time": "22:15",
+            "arrival_airport": "YVR",
+            "arrival_time": "23:55",
+            "price": "132.00"
+        },
+        {
+            "airline": "AC",
+            "number": "165",
+            "departure_airport": "YQB",
+            "departure_time": "06:00",
+            "arrival_airport": "YGP",
+            "arrival_time": "07:20",
+            "price": "110.77"
+        },
+        {
+            "airline": "AC",
+            "number": "166",
+            "departure_airport": "YQB",
+            "departure_time": "20:55",
+            "arrival_airport": "YOW",
+            "arrival_time": "22:10",
+            "price": "89.49"
+        },
+        {
+            "airline": "AC",
+            "number": "167",
+            "departure_airport": "YQB",
+            "departure_time": "17:00",
+            "arrival_airport": "YUL",
+            "arrival_time": "18:00",
+            "price": "74.63"
+        },
+        {
+            "airline": "AC",
+            "number": "168",
+            "departure_airport": "YQB",
+            "departure_time": "18:45",
+            "arrival_airport": "YYZ",
+            "arrival_time": "20:25",
+            "price": "129.47"
+        },
+        {
+            "airline": "AC",
+            "number": "169",
+            "departure_airport": "YQB",
+            "departure_time": "11:25",
+            "arrival_airport": "YZV",
+            "arrival_time": "12:45",
+            "price": "108.04"
+        },
+        {
+            "airline": "AC",
+            "number": "170",
+            "departure_airport": "YQF",
+            "departure_time": "07:25",
+            "arrival_airport": "YYC",
+            "arrival_time": "08:10",
+            "price": "62.10"
+        },
+        {
+            "airline": "AC",
+            "number": "171",
+            "departure_airport": "YQG",
+            "departure_time": "09:25",
+            "arrival_airport": "YYZ",
+            "arrival_time": "10:30",
+            "price": "83.34"
+        },
+        {
+            "airline": "AC",
+            "number": "172",
+            "departure_airport": "YQL",
+            "departure_time": "15:20",
+            "arrival_airport": "YYC",
+            "arrival_time": "16:10",
+            "price": "69.49"
+        },
+        {
+            "airline": "AC",
+            "number": "173",
+            "departure_airport": "YQM",
+            "departure_time": "16:00",
+            "arrival_airport": "YHZ",
+            "arrival_time": "16:50",
+            "price": "67.10"
+        },
+        {
+            "airline": "AC",
+            "number": "174",
+            "departure_airport": "YQM",
+            "departure_time": "20:50",
+            "arrival_airport": "YOW",
+            "arrival_time": "21:40",
+            "price": "143.28"
+        },
+        {
+            "airline": "AC",
+            "number": "175",
+            "departure_airport": "YQM",
+            "departure_time": "19:05",
+            "arrival_airport": "YUL",
+            "arrival_time": "19:40",
+            "price": "126.64"
+        },
+        {
+            "airline": "AC",
+            "number": "176",
+            "departure_airport": "YQM",
+            "departure_time": "08:40",
+            "arrival_airport": "YYZ",
+            "arrival_time": "10:00",
+            "price": "181.72"
+        },
+        {
+            "airline": "AC",
+            "number": "177",
+            "departure_airport": "YQQ",
+            "departure_time": "09:10",
+            "arrival_airport": "YVR",
+            "arrival_time": "09:55",
+            "price": "63.94"
+        },
+        {
+            "airline": "AC",
+            "number": "178",
+            "departure_airport": "YQR",
+            "departure_time": "10:35",
+            "arrival_airport": "YEG",
+            "arrival_time": "11:10",
+            "price": "124.89"
+        },
+        {
+            "airline": "AC",
+            "number": "179",
+            "departure_airport": "YQR",
+            "departure_time": "11:10",
+            "arrival_airport": "YVR",
+            "arrival_time": "11:45",
+            "price": "195.56"
+        },
+        {
+            "airline": "AC",
+            "number": "180",
+            "departure_airport": "YQR",
+            "departure_time": "07:00",
+            "arrival_airport": "YWG",
+            "arrival_time": "08:20",
+            "price": "107.50"
+        },
+        {
+            "airline": "AC",
+            "number": "181",
+            "departure_airport": "YQR",
+            "departure_time": "08:15",
+            "arrival_airport": "YYC",
+            "arrival_time": "08:45",
+            "price": "121.78"
+        },
+        {
+            "airline": "AC",
+            "number": "182",
+            "departure_airport": "YQR",
+            "departure_time": "16:15",
+            "arrival_airport": "YYZ",
+            "arrival_time": "20:10",
+            "price": "272.06"
+        },
+        {
+            "airline": "AC",
+            "number": "183",
+            "departure_airport": "YQT",
+            "departure_time": "19:00",
+            "arrival_airport": "YWG",
+            "arrival_time": "19:25",
+            "price": "115.04"
+        },
+        {
+            "airline": "AC",
+            "number": "184",
+            "departure_airport": "YQT",
+            "departure_time": "10:15",
+            "arrival_airport": "YYZ",
+            "arrival_time": "12:10",
+            "price": "149.25"
+        },
+        {
+            "airline": "AC",
+            "number": "185",
+            "departure_airport": "YQU",
+            "departure_time": "10:35",
+            "arrival_airport": "YEG",
+            "arrival_time": "11:40",
+            "price": "93.26"
+        },
+        {
+            "airline": "AC",
+            "number": "186",
+            "departure_airport": "YQU",
+            "departure_time": "11:35",
+            "arrival_airport": "YYC",
+            "arrival_time": "12:55",
+            "price": "110.18"
+        },
+        {
+            "airline": "AC",
+            "number": "187",
+            "departure_airport": "YQX",
+            "departure_time": "20:10",
+            "arrival_airport": "YHZ",
+            "arrival_time": "21:25",
+            "price": "138.59"
+        },
+        {
+            "airline": "AC",
+            "number": "188",
+            "departure_airport": "YQX",
+            "departure_time": "22:40",
+            "arrival_airport": "YYR",
+            "arrival_time": "23:40",
+            "price": "118.92"
+        },
+        {
+            "airline": "AC",
+            "number": "189",
+            "departure_airport": "YQX",
+            "departure_time": "06:25",
+            "arrival_airport": "YYT",
+            "arrival_time": "07:20",
+            "price": "70.88"
+        },
+        {
+            "airline": "AC",
+            "number": "190",
+            "departure_airport": "YQY",
+            "departure_time": "21:30",
+            "arrival_airport": "YHZ",
+            "arrival_time": "22:35",
+            "price": "82.54"
+        },
+        {
+            "airline": "AC",
+            "number": "191",
+            "departure_airport": "YQY",
+            "departure_time": "22:10",
+            "arrival_airport": "YYZ",
+            "arrival_time": "23:30",
+            "price": "220.85"
+        },
+        {
+            "airline": "AC",
+            "number": "192",
+            "departure_airport": "YQZ",
+            "departure_time": "11:15",
+            "arrival_airport": "YVR",
+            "arrival_time": "12:25",
+            "price": "96.16"
+        },
+        {
+            "airline": "AC",
+            "number": "193",
+            "departure_airport": "YQZ",
+            "departure_time": "10:25",
+            "arrival_airport": "YWL",
+            "arrival_time": "11:05",
+            "price": "59.85"
+        },
+        {
+            "airline": "AC",
+            "number": "194",
+            "departure_airport": "YSB",
+            "departure_time": "08:50",
+            "arrival_airport": "YYZ",
+            "arrival_time": "10:00",
+            "price": "86.44"
+        },
+        {
+            "airline": "AC",
+            "number": "195",
+            "departure_airport": "YSJ",
+            "departure_time": "11:35",
+            "arrival_airport": "YHZ",
+            "arrival_time": "12:30",
+            "price": "70.24"
+        },
+        {
+            "airline": "AC",
+            "number": "196",
+            "departure_airport": "YSJ",
+            "departure_time": "07:10",
+            "arrival_airport": "YUL",
+            "arrival_time": "07:35",
+            "price": "116.43"
+        },
+        {
+            "airline": "AC",
+            "number": "197",
+            "departure_airport": "YSJ",
+            "departure_time": "08:15",
+            "arrival_airport": "YYZ",
+            "arrival_time": "09:25",
+            "price": "170.39"
+        },
+        {
+            "airline": "AC",
+            "number": "198",
+            "departure_airport": "YTS",
+            "departure_time": "18:40",
+            "arrival_airport": "YYZ",
+            "arrival_time": "20:00",
+            "price": "110.64"
+        },
+        {
+            "airline": "AC",
+            "number": "199",
+            "departure_airport": "YTZ",
+            "departure_time": "19:00",
+            "arrival_airport": "YUL",
+            "arrival_time": "20:15",
+            "price": "103.19"
+        },
+        {
+            "airline": "AC",
+            "number": "200",
+            "departure_airport": "YUL",
+            "departure_time": "05:40",
+            "arrival_airport": "YBC",
+            "arrival_time": "07:05",
+            "price": "113.12"
+        },
+        {
+            "airline": "AC",
+            "number": "201",
+            "departure_airport": "YUL",
+            "departure_time": "12:25",
+            "arrival_airport": "YBG",
+            "arrival_time": "13:40",
+            "price": "90.82"
+        },
+        {
+            "airline": "AC",
+            "number": "202",
+            "departure_airport": "YUL",
+            "departure_time": "21:30",
+            "arrival_airport": "YEG",
+            "arrival_time": "23:30",
+            "price": "440.56"
+        },
+        {
+            "airline": "AC",
+            "number": "203",
+            "departure_airport": "YUL",
+            "departure_time": "14:00",
+            "arrival_airport": "YFC",
+            "arrival_time": "16:20",
+            "price": "110.74"
+        },
+        {
+            "airline": "AC",
+            "number": "204",
+            "departure_airport": "YUL",
+            "departure_time": "07:50",
+            "arrival_airport": "YHZ",
+            "arrival_time": "10:35",
+            "price": "137.46"
+        },
+        {
+            "airline": "AC",
+            "number": "205",
+            "departure_airport": "YUL",
+            "departure_time": "21:00",
+            "arrival_airport": "YOW",
+            "arrival_time": "21:50",
+            "price": "65.66"
+        },
+        {
+            "airline": "AC",
+            "number": "206",
+            "departure_airport": "YUL",
+            "departure_time": "22:00",
+            "arrival_airport": "YQB",
+            "arrival_time": "23:00",
+            "price": "74.63"
+        },
+        {
+            "airline": "AC",
+            "number": "207",
+            "departure_airport": "YUL",
+            "departure_time": "20:05",
+            "arrival_airport": "YQM",
+            "arrival_time": "22:40",
+            "price": "126.64"
+        },
+        {
+            "airline": "AC",
+            "number": "208",
+            "departure_airport": "YUL",
+            "departure_time": "18:00",
+            "arrival_airport": "YSJ",
+            "arrival_time": "20:25",
+            "price": "116.43"
+        },
+        {
+            "airline": "AC",
+            "number": "209",
+            "departure_airport": "YUL",
+            "departure_time": "11:35",
+            "arrival_airport": "YTZ",
+            "arrival_time": "12:50",
+            "price": "103.19"
+        },
+        {
+            "airline": "AC",
+            "number": "210",
+            "departure_airport": "YUL",
+            "departure_time": "17:20",
+            "arrival_airport": "YUY",
+            "arrival_time": "18:35",
+            "price": "103.17"
+        },
+        {
+            "airline": "AC",
+            "number": "211",
+            "departure_airport": "YUL",
+            "departure_time": "10:10",
+            "arrival_airport": "YVO",
+            "arrival_time": "11:20",
+            "price": "95.30"
+        },
+        {
+            "airline": "AC",
+            "number": "212",
+            "departure_airport": "YUL",
+            "departure_time": "18:55",
+            "arrival_airport": "YVR",
+            "arrival_time": "20:45",
+            "price": "519.04"
+        },
+        {
+            "airline": "AC",
+            "number": "213",
+            "departure_airport": "YUL",
+            "departure_time": "19:25",
+            "arrival_airport": "YWG",
+            "arrival_time": "21:05",
+            "price": "249.02"
+        },
+        {
+            "airline": "AC",
+            "number": "214",
+            "departure_airport": "YUL",
+            "departure_time": "12:30",
+            "arrival_airport": "YYC",
+            "arrival_time": "14:30",
+            "price": "444.61"
+        },
+        {
+            "airline": "AC",
+            "number": "215",
+            "departure_airport": "YUL",
+            "departure_time": "13:15",
+            "arrival_airport": "YYG",
+            "arrival_time": "16:00",
+            "price": "139.91"
+        },
+        {
+            "airline": "AC",
+            "number": "216",
+            "departure_airport": "YUL",
+            "departure_time": "18:05",
+            "arrival_airport": "YYT",
+            "arrival_time": "22:00",
+            "price": "226.95"
+        },
+        {
+            "airline": "AC",
+            "number": "217",
+            "departure_airport": "YUL",
+            "departure_time": "12:20",
+            "arrival_airport": "YYY",
+            "arrival_time": "13:40",
+            "price": "108.97"
+        },
+        {
+            "airline": "AC",
+            "number": "218",
+            "departure_airport": "YUL",
+            "departure_time": "08:30",
+            "arrival_airport": "YYZ",
+            "arrival_time": "09:45",
+            "price": "104.79"
+        },
+        {
+            "airline": "AC",
+            "number": "219",
+            "departure_airport": "YUL",
+            "departure_time": "07:50",
+            "arrival_airport": "YZV",
+            "arrival_time": "09:30",
+            "price": "133.45"
+        },
+        {
+            "airline": "AC",
+            "number": "220",
+            "departure_airport": "YUL",
+            "departure_time": "16:50",
+            "arrival_airport": "ZBF",
+            "arrival_time": "19:20",
+            "price": "121.26"
+        },
+        {
+            "airline": "AC",
+            "number": "221",
+            "departure_airport": "YUY",
+            "departure_time": "22:05",
+            "arrival_airport": "YUL",
+            "arrival_time": "23:20",
+            "price": "103.17"
+        },
+        {
+            "airline": "AC",
+            "number": "222",
+            "departure_airport": "YUY",
+            "departure_time": "22:40",
+            "arrival_airport": "YVO",
+            "arrival_time": "23:20",
+            "price": "57.80"
+        },
+        {
+            "airline": "AC",
+            "number": "223",
+            "departure_airport": "YVO",
+            "departure_time": "06:25",
+            "arrival_airport": "YUL",
+            "arrival_time": "07:35",
+            "price": "95.30"
+        },
+        {
+            "airline": "AC",
+            "number": "224",
+            "departure_airport": "YVO",
+            "departure_time": "14:30",
+            "arrival_airport": "YUY",
+            "arrival_time": "15:10",
+            "price": "57.80"
+        },
+        {
+            "airline": "AC",
+            "number": "225",
+            "departure_airport": "YVR",
+            "departure_time": "22:15",
+            "arrival_airport": "YCD",
+            "arrival_time": "22:50",
+            "price": "54.75"
+        },
+        {
+            "airline": "AC",
+            "number": "226",
+            "departure_airport": "YVR",
+            "departure_time": "19:25",
+            "arrival_airport": "YCG",
+            "arrival_time": "20:30",
+            "price": "93.34"
+        },
+        {
+            "airline": "AC",
+            "number": "227",
+            "departure_airport": "YVR",
+            "departure_time": "13:55",
+            "arrival_airport": "YEG",
+            "arrival_time": "16:40",
+            "price": "137.99"
+        },
+        {
+            "airline": "AC",
+            "number": "228",
+            "departure_airport": "YVR",
+            "departure_time": "18:20",
+            "arrival_airport": "YKA",
+            "arrival_time": "19:20",
+            "price": "77.38"
+        },
+        {
+            "airline": "AC",
+            "number": "229",
+            "departure_airport": "YVR",
+            "departure_time": "19:30",
+            "arrival_airport": "YLW",
+            "arrival_time": "20:35",
+            "price": "80.59"
+        },
+        {
+            "airline": "AC",
+            "number": "230",
+            "departure_airport": "YVR",
+            "departure_time": "08:05",
+            "arrival_airport": "YMM",
+            "arrival_time": "11:20",
+            "price": "175.56"
+        },
+        {
+            "airline": "AC",
+            "number": "231",
+            "departure_airport": "YVR",
+            "departure_time": "22:05",
+            "arrival_airport": "YOW",
+            "arrival_time": "05:45",
+            "price": "504.72"
+        },
+        {
+            "airline": "AC",
+            "number": "232",
+            "departure_airport": "YVR",
+            "departure_time": "19:20",
+            "arrival_airport": "YPR",
+            "arrival_time": "21:00",
+            "price": "132.00"
+        },
+        {
+            "airline": "AC",
+            "number": "233",
+            "departure_airport": "YVR",
+            "departure_time": "11:25",
+            "arrival_airport": "YQR",
+            "arrival_time": "16:00",
+            "price": "195.56"
+        },
+        {
+            "airline": "AC",
+            "number": "234",
+            "departure_airport": "YVR",
+            "departure_time": "16:15",
+            "arrival_airport": "YQZ",
+            "arrival_time": "17:25",
+            "price": "96.16"
+        },
+        {
+            "airline": "AC",
+            "number": "235",
+            "departure_airport": "YVR",
+            "departure_time": "20:30",
+            "arrival_airport": "YUL",
+            "arrival_time": "04:20",
+            "price": "519.04"
+        },
+        {
+            "airline": "AC",
+            "number": "236",
+            "departure_airport": "YVR",
+            "departure_time": "07:00",
+            "arrival_airport": "YWG",
+            "arrival_time": "11:40",
+            "price": "254.03"
+        },
+        {
+            "airline": "AC",
+            "number": "237",
+            "departure_airport": "YVR",
+            "departure_time": "21:40",
+            "arrival_airport": "YWL",
+            "arrival_time": "22:50",
+            "price": "86.59"
+        },
+        {
+            "airline": "AC",
+            "number": "238",
+            "departure_airport": "YVR",
+            "departure_time": "20:50",
+            "arrival_airport": "YXC",
+            "arrival_time": "23:10",
+            "price": "108.11"
+        },
+        {
+            "airline": "AC",
+            "number": "239",
+            "departure_airport": "YVR",
+            "departure_time": "07:15",
+            "arrival_airport": "YXE",
+            "arrival_time": "11:35",
+            "price": "181.51"
+        },
+        {
+            "airline": "AC",
+            "number": "240",
+            "departure_airport": "YVR",
+            "departure_time": "15:50",
+            "arrival_airport": "YXJ",
+            "arrival_time": "18:35",
+            "price": "137.03"
+        },
+        {
+            "airline": "AC",
+            "number": "241",
+            "departure_airport": "YVR",
+            "departure_time": "15:10",
+            "arrival_airport": "YXS",
+            "arrival_time": "16:30",
+            "price": "106.56"
+        },
+        {
+            "airline": "AC",
+            "number": "242",
+            "departure_airport": "YVR",
+            "departure_time": "20:25",
+            "arrival_airport": "YXT",
+            "arrival_time": "22:00",
+            "price": "125.26"
+        },
+        {
+            "airline": "AC",
+            "number": "243",
+            "departure_airport": "YVR",
+            "departure_time": "18:40",
+            "arrival_airport": "YXY",
+            "arrival_time": "21:25",
+            "price": "212.17"
+        },
+        {
+            "airline": "AC",
+            "number": "244",
+            "departure_airport": "YVR",
+            "departure_time": "20:55",
+            "arrival_airport": "YYC",
+            "arrival_time": "23:30",
+            "price": "124.50"
+        },
+        {
+            "airline": "AC",
+            "number": "245",
+            "departure_airport": "YVR",
+            "departure_time": "14:40",
+            "arrival_airport": "YYD",
+            "arrival_time": "16:15",
+            "price": "124.14"
+        },
+        {
+            "airline": "AC",
+            "number": "246",
+            "departure_airport": "YVR",
+            "departure_time": "07:00",
+            "arrival_airport": "YYF",
+            "arrival_time": "08:00",
+            "price": "77.74"
+        },
+        {
+            "airline": "AC",
+            "number": "247",
+            "departure_airport": "YVR",
+            "departure_time": "16:35",
+            "arrival_airport": "YYJ",
+            "arrival_time": "17:15",
+            "price": "55.97"
+        },
+        {
+            "airline": "AC",
+            "number": "248",
+            "departure_airport": "YVR",
+            "departure_time": "19:35",
+            "arrival_airport": "YYZ",
+            "arrival_time": "03:00",
+            "price": "482.01"
+        },
+        {
+            "airline": "AC",
+            "number": "249",
+            "departure_airport": "YVR",
+            "departure_time": "21:10",
+            "arrival_airport": "YZP",
+            "arrival_time": "22:50",
+            "price": "131.59"
+        },
+        {
+            "airline": "AC",
+            "number": "250",
+            "departure_airport": "YWG",
+            "departure_time": "08:00",
+            "arrival_airport": "YEG",
+            "arrival_time": "09:20",
+            "price": "179.55"
+        },
+        {
+            "airline": "AC",
+            "number": "251",
+            "departure_airport": "YWG",
+            "departure_time": "09:10",
+            "arrival_airport": "YOW",
+            "arrival_time": "12:40",
+            "price": "234.74"
+        },
+        {
+            "airline": "AC",
+            "number": "252",
+            "departure_airport": "YWG",
+            "departure_time": "12:30",
+            "arrival_airport": "YQR",
+            "arrival_time": "13:50",
+            "price": "107.50"
+        },
+        {
+            "airline": "AC",
+            "number": "253",
+            "departure_airport": "YWG",
+            "departure_time": "12:15",
+            "arrival_airport": "YQT",
+            "arrival_time": "14:40",
+            "price": "115.04"
+        },
+        {
+            "airline": "AC",
+            "number": "254",
+            "departure_airport": "YWG",
+            "departure_time": "06:45",
+            "arrival_airport": "YUL",
+            "arrival_time": "10:25",
+            "price": "249.02"
+        },
+        {
+            "airline": "AC",
+            "number": "255",
+            "departure_airport": "YWG",
+            "departure_time": "11:25",
+            "arrival_airport": "YVR",
+            "arrival_time": "12:05",
+            "price": "254.03"
+        },
+        {
+            "airline": "AC",
+            "number": "256",
+            "departure_airport": "YWG",
+            "departure_time": "20:00",
+            "arrival_airport": "YXE",
+            "arrival_time": "21:35",
+            "price": "126.76"
+        },
+        {
+            "airline": "AC",
+            "number": "257",
+            "departure_airport": "YWG",
+            "departure_time": "13:40",
+            "arrival_airport": "YYC",
+            "arrival_time": "15:00",
+            "price": "180.06"
+        },
+        {
+            "airline": "AC",
+            "number": "258",
+            "departure_airport": "YWG",
+            "departure_time": "11:00",
+            "arrival_airport": "YYZ",
+            "arrival_time": "14:15",
+            "price": "214.44"
+        },
+        {
+            "airline": "AC",
+            "number": "259",
+            "departure_airport": "YWK",
+            "departure_time": "15:55",
+            "arrival_airport": "YYR",
+            "arrival_time": "17:05",
+            "price": "96.50"
+        },
+        {
+            "airline": "AC",
+            "number": "260",
+            "departure_airport": "YWK",
+            "departure_time": "09:05",
+            "arrival_airport": "YZV",
+            "arrival_time": "09:10",
+            "price": "82.32"
+        },
+        {
+            "airline": "AC",
+            "number": "261",
+            "departure_airport": "YWL",
+            "departure_time": "17:05",
+            "arrival_airport": "YQZ",
+            "arrival_time": "17:45",
+            "price": "59.85"
+        },
+        {
+            "airline": "AC",
+            "number": "262",
+            "departure_airport": "YWL",
+            "departure_time": "19:20",
+            "arrival_airport": "YVR",
+            "arrival_time": "20:30",
+            "price": "86.59"
+        },
+        {
+            "airline": "AC",
+            "number": "263",
+            "departure_airport": "YXC",
+            "departure_time": "12:20",
+            "arrival_airport": "YVR",
+            "arrival_time": "12:40",
+            "price": "108.11"
+        },
+        {
+            "airline": "AC",
+            "number": "264",
+            "departure_airport": "YXC",
+            "departure_time": "22:05",
+            "arrival_airport": "YYC",
+            "arrival_time": "23:00",
+            "price": "71.96"
+        },
+        {
+            "airline": "AC",
+            "number": "265",
+            "departure_airport": "YXE",
+            "departure_time": "20:25",
+            "arrival_airport": "YEG",
+            "arrival_time": "20:40",
+            "price": "101.79"
+        },
+        {
+            "airline": "AC",
+            "number": "266",
+            "departure_airport": "YXE",
+            "departure_time": "09:00",
+            "arrival_airport": "YVR",
+            "arrival_time": "09:20",
+            "price": "181.51"
+        },
+        {
+            "airline": "AC",
+            "number": "267",
+            "departure_airport": "YXE",
+            "departure_time": "14:30",
+            "arrival_airport": "YWG",
+            "arrival_time": "16:05",
+            "price": "126.76"
+        },
+        {
+            "airline": "AC",
+            "number": "268",
+            "departure_airport": "YXE",
+            "departure_time": "10:05",
+            "arrival_airport": "YYC",
+            "arrival_time": "10:25",
+            "price": "106.02"
+        },
+        {
+            "airline": "AC",
+            "number": "269",
+            "departure_airport": "YXE",
+            "departure_time": "07:25",
+            "arrival_airport": "YYZ",
+            "arrival_time": "11:30",
+            "price": "292.09"
+        },
+        {
+            "airline": "AC",
+            "number": "270",
+            "departure_airport": "YXH",
+            "departure_time": "22:40",
+            "arrival_airport": "YYC",
+            "arrival_time": "23:40",
+            "price": "77.92"
+        },
+        {
+            "airline": "AC",
+            "number": "271",
+            "departure_airport": "YXJ",
+            "departure_time": "07:05",
+            "arrival_airport": "YVR",
+            "arrival_time": "07:50",
+            "price": "137.03"
+        },
+        {
+            "airline": "AC",
+            "number": "272",
+            "departure_airport": "YXS",
+            "departure_time": "16:30",
+            "arrival_airport": "YVR",
+            "arrival_time": "17:50",
+            "price": "106.56"
+        },
+        {
+            "airline": "AC",
+            "number": "273",
+            "departure_airport": "YXT",
+            "departure_time": "19:50",
+            "arrival_airport": "YVR",
+            "arrival_time": "21:25",
+            "price": "125.26"
+        },
+        {
+            "airline": "AC",
+            "number": "274",
+            "departure_airport": "YXU",
+            "departure_time": "22:45",
+            "arrival_airport": "YOW",
+            "arrival_time": "00:00",
+            "price": "104.63"
+        },
+        {
+            "airline": "AC",
+            "number": "275",
+            "departure_airport": "YXU",
+            "departure_time": "18:15",
+            "arrival_airport": "YYZ",
+            "arrival_time": "19:00",
+            "price": "64.66"
+        },
+        {
+            "airline": "AC",
+            "number": "276",
+            "departure_airport": "YXY",
+            "departure_time": "08:35",
+            "arrival_airport": "YVR",
+            "arrival_time": "11:20",
+            "price": "212.17"
+        },
+        {
+            "airline": "AC",
+            "number": "277",
+            "departure_airport": "YYB",
+            "departure_time": "22:20",
+            "arrival_airport": "YYZ",
+            "arrival_time": "23:25",
+            "price": "81.91"
+        },
+        {
+            "airline": "AC",
+            "number": "278",
+            "departure_airport": "YYC",
+            "departure_time": "17:10",
+            "arrival_airport": "YCG",
+            "arrival_time": "17:20",
+            "price": "84.96"
+        },
+        {
+            "airline": "AC",
+            "number": "279",
+            "departure_airport": "YYC",
+            "departure_time": "09:20",
+            "arrival_airport": "YEG",
+            "arrival_time": "10:20",
+            "price": "76.06"
+        },
+        {
+            "airline": "AC",
+            "number": "280",
+            "departure_airport": "YYC",
+            "departure_time": "12:55",
+            "arrival_airport": "YKA",
+            "arrival_time": "13:05",
+            "price": "98.79"
+        },
+        {
+            "airline": "AC",
+            "number": "281",
+            "departure_airport": "YYC",
+            "departure_time": "16:25",
+            "arrival_airport": "YLW",
+            "arrival_time": "16:45",
+            "price": "92.98"
+        },
+        {
+            "airline": "AC",
+            "number": "282",
+            "departure_airport": "YYC",
+            "departure_time": "13:10",
+            "arrival_airport": "YMM",
+            "arrival_time": "14:40",
+            "price": "119.68"
+        },
+        {
+            "airline": "AC",
+            "number": "283",
+            "departure_airport": "YYC",
+            "departure_time": "14:30",
+            "arrival_airport": "YOW",
+            "arrival_time": "20:25",
+            "price": "430.64"
+        },
+        {
+            "airline": "AC",
+            "number": "284",
+            "departure_airport": "YYC",
+            "departure_time": "16:55",
+            "arrival_airport": "YQF",
+            "arrival_time": "17:40",
+            "price": "62.10"
+        },
+        {
+            "airline": "AC",
+            "number": "285",
+            "departure_airport": "YYC",
+            "departure_time": "21:45",
+            "arrival_airport": "YQL",
+            "arrival_time": "22:35",
+            "price": "69.49"
+        },
+        {
+            "airline": "AC",
+            "number": "286",
+            "departure_airport": "YYC",
+            "departure_time": "17:10",
+            "arrival_airport": "YQR",
+            "arrival_time": "19:40",
+            "price": "121.78"
+        },
+        {
+            "airline": "AC",
+            "number": "287",
+            "departure_airport": "YYC",
+            "departure_time": "15:05",
+            "arrival_airport": "YQU",
+            "arrival_time": "16:25",
+            "price": "110.18"
+        },
+        {
+            "airline": "AC",
+            "number": "288",
+            "departure_airport": "YYC",
+            "departure_time": "09:25",
+            "arrival_airport": "YUL",
+            "arrival_time": "15:25",
+            "price": "444.61"
+        },
+        {
+            "airline": "AC",
+            "number": "289",
+            "departure_airport": "YYC",
+            "departure_time": "10:05",
+            "arrival_airport": "YVR",
+            "arrival_time": "10:40",
+            "price": "124.50"
+        },
+        {
+            "airline": "AC",
+            "number": "290",
+            "departure_airport": "YYC",
+            "departure_time": "06:15",
+            "arrival_airport": "YWG",
+            "arrival_time": "09:35",
+            "price": "180.06"
+        },
+        {
+            "airline": "AC",
+            "number": "291",
+            "departure_airport": "YYC",
+            "departure_time": "17:45",
+            "arrival_airport": "YXC",
+            "arrival_time": "18:40",
+            "price": "71.96"
+        },
+        {
+            "airline": "AC",
+            "number": "292",
+            "departure_airport": "YYC",
+            "departure_time": "07:20",
+            "arrival_airport": "YXE",
+            "arrival_time": "09:40",
+            "price": "106.02"
+        },
+        {
+            "airline": "AC",
+            "number": "293",
+            "departure_airport": "YYC",
+            "departure_time": "21:05",
+            "arrival_airport": "YXH",
+            "arrival_time": "22:05",
+            "price": "77.92"
+        },
+        {
+            "airline": "AC",
+            "number": "294",
+            "departure_airport": "YYC",
+            "departure_time": "06:40",
+            "arrival_airport": "YYJ",
+            "arrival_time": "07:15",
+            "price": "128.97"
+        },
+        {
+            "airline": "AC",
+            "number": "295",
+            "departure_airport": "YYC",
+            "departure_time": "17:00",
+            "arrival_airport": "YYZ",
+            "arrival_time": "22:40",
+            "price": "409.81"
+        },
+        {
+            "airline": "AC",
+            "number": "296",
+            "departure_airport": "YYC",
+            "departure_time": "11:20",
+            "arrival_airport": "YZF",
+            "arrival_time": "13:45",
+            "price": "187.84"
+        },
+        {
+            "airline": "AC",
+            "number": "297",
+            "departure_airport": "YYD",
+            "departure_time": "06:05",
+            "arrival_airport": "YVR",
+            "arrival_time": "07:40",
+            "price": "124.14"
+        },
+        {
+            "airline": "AC",
+            "number": "298",
+            "departure_airport": "YYF",
+            "departure_time": "06:45",
+            "arrival_airport": "YVR",
+            "arrival_time": "07:45",
+            "price": "77.74"
+        },
+        {
+            "airline": "AC",
+            "number": "299",
+            "departure_airport": "YYG",
+            "departure_time": "09:00",
+            "arrival_airport": "YHZ",
+            "arrival_time": "09:50",
+            "price": "66.55"
+        },
+        {
+            "airline": "AC",
+            "number": "300",
+            "departure_airport": "YYG",
+            "departure_time": "06:45",
+            "arrival_airport": "YUL",
+            "arrival_time": "07:30",
+            "price": "139.91"
+        },
+        {
+            "airline": "AC",
+            "number": "301",
+            "departure_airport": "YYG",
+            "departure_time": "05:00",
+            "arrival_airport": "YYZ",
+            "arrival_time": "06:35",
+            "price": "195.07"
+        },
+        {
+            "airline": "AC",
+            "number": "302",
+            "departure_airport": "YYJ",
+            "departure_time": "06:40",
+            "arrival_airport": "YVR",
+            "arrival_time": "07:20",
+            "price": "55.97"
+        },
+        {
+            "airline": "AC",
+            "number": "303",
+            "departure_airport": "YYJ",
+            "departure_time": "05:45",
+            "arrival_airport": "YYC",
+            "arrival_time": "08:20",
+            "price": "128.97"
+        },
+        {
+            "airline": "AC",
+            "number": "304",
+            "departure_airport": "YYJ",
+            "departure_time": "17:45",
+            "arrival_airport": "YYZ",
+            "arrival_time": "01:15",
+            "price": "484.73"
+        },
+        {
+            "airline": "AC",
+            "number": "305",
+            "departure_airport": "YYR",
+            "departure_time": "06:25",
+            "arrival_airport": "YDF",
+            "arrival_time": "08:10",
+            "price": "104.35"
+        },
+        {
+            "airline": "AC",
+            "number": "306",
+            "departure_airport": "YYR",
+            "departure_time": "17:50",
+            "arrival_airport": "YHZ",
+            "arrival_time": "19:50",
+            "price": "155.10"
+        },
+        {
+            "airline": "AC",
+            "number": "307",
+            "departure_airport": "YYR",
+            "departure_time": "07:30",
+            "arrival_airport": "YQX",
+            "arrival_time": "09:30",
+            "price": "118.92"
+        },
+        {
+            "airline": "AC",
+            "number": "308",
+            "departure_airport": "YYR",
+            "departure_time": "19:30",
+            "arrival_airport": "YWK",
+            "arrival_time": "20:40",
+            "price": "96.50"
+        },
+        {
+            "airline": "AC",
+            "number": "309",
+            "departure_airport": "YYR",
+            "departure_time": "11:25",
+            "arrival_airport": "YYT",
+            "arrival_time": "13:40",
+            "price": "140.72"
+        },
+        {
+            "airline": "AC",
+            "number": "310",
+            "departure_airport": "YYT",
+            "departure_time": "05:45",
+            "arrival_airport": "YDF",
+            "arrival_time": "07:00",
+            "price": "91.39"
+        },
+        {
+            "airline": "AC",
+            "number": "311",
+            "departure_airport": "YYT",
+            "departure_time": "07:10",
+            "arrival_airport": "YHZ",
+            "arrival_time": "08:30",
+            "price": "145.85"
+        },
+        {
+            "airline": "AC",
+            "number": "312",
+            "departure_airport": "YYT",
+            "departure_time": "15:00",
+            "arrival_airport": "YOW",
+            "arrival_time": "16:05",
+            "price": "243.36"
+        },
+        {
+            "airline": "AC",
+            "number": "313",
+            "departure_airport": "YYT",
+            "departure_time": "11:30",
+            "arrival_airport": "YQX",
+            "arrival_time": "12:25",
+            "price": "70.88"
+        },
+        {
+            "airline": "AC",
+            "number": "314",
+            "departure_airport": "YYT",
+            "departure_time": "14:15",
+            "arrival_airport": "YUL",
+            "arrival_time": "15:10",
+            "price": "226.95"
+        },
+        {
+            "airline": "AC",
+            "number": "315",
+            "departure_airport": "YYT",
+            "departure_time": "19:00",
+            "arrival_airport": "YYR",
+            "arrival_time": "20:15",
+            "price": "140.72"
+        },
+        {
+            "airline": "AC",
+            "number": "316",
+            "departure_airport": "YYT",
+            "departure_time": "09:10",
+            "arrival_airport": "YYZ",
+            "arrival_time": "10:40",
+            "price": "282.58"
+        },
+        {
+            "airline": "AC",
+            "number": "317",
+            "departure_airport": "YYY",
+            "departure_time": "09:45",
+            "arrival_airport": "YBC",
+            "arrival_time": "10:20",
+            "price": "55.41"
+        },
+        {
+            "airline": "AC",
+            "number": "318",
+            "departure_airport": "YYY",
+            "departure_time": "06:10",
+            "arrival_airport": "YUL",
+            "arrival_time": "07:30",
+            "price": "108.97"
+        },
+        {
+            "airline": "AC",
+            "number": "319",
+            "departure_airport": "YYZ",
+            "departure_time": "12:05",
+            "arrival_airport": "YAM",
+            "arrival_time": "13:20",
+            "price": "103.34"
+        },
+        {
+            "airline": "AC",
+            "number": "320",
+            "departure_airport": "YYZ",
+            "departure_time": "09:00",
+            "arrival_airport": "YDF",
+            "arrival_time": "13:05",
+            "price": "247.40"
+        },
+        {
+            "airline": "AC",
+            "number": "321",
+            "departure_airport": "YYZ",
+            "departure_time": "16:55",
+            "arrival_airport": "YEG",
+            "arrival_time": "18:35",
+            "price": "409.80"
+        },
+        {
+            "airline": "AC",
+            "number": "322",
+            "departure_airport": "YYZ",
+            "departure_time": "19:25",
+            "arrival_airport": "YFC",
+            "arrival_time": "22:35",
+            "price": "165.66"
+        },
+        {
+            "airline": "AC",
+            "number": "323",
+            "departure_airport": "YYZ",
+            "departure_time": "12:10",
+            "arrival_airport": "YGK",
+            "arrival_time": "13:10",
+            "price": "76.54"
+        },
+        {
+            "airline": "AC",
+            "number": "324",
+            "departure_airport": "YYZ",
+            "departure_time": "09:15",
+            "arrival_airport": "YHZ",
+            "arrival_time": "12:45",
+            "price": "190.71"
+        },
+        {
+            "airline": "AC",
+            "number": "325",
+            "departure_airport": "YYZ",
+            "departure_time": "21:45",
+            "arrival_airport": "YMM",
+            "arrival_time": "23:20",
+            "price": "404.09"
+        },
+        {
+            "airline": "AC",
+            "number": "326",
+            "departure_airport": "YYZ",
+            "departure_time": "15:05",
+            "arrival_airport": "YOW",
+            "arrival_time": "16:20",
+            "price": "88.99"
+        },
+        {
+            "airline": "AC",
+            "number": "327",
+            "departure_airport": "YYZ",
+            "departure_time": "14:05",
+            "arrival_airport": "YQB",
+            "arrival_time": "15:45",
+            "price": "129.47"
+        },
+        {
+            "airline": "AC",
+            "number": "328",
+            "departure_airport": "YYZ",
+            "departure_time": "13:10",
+            "arrival_airport": "YQG",
+            "arrival_time": "14:15",
+            "price": "83.34"
+        },
+        {
+            "airline": "AC",
+            "number": "329",
+            "departure_airport": "YYZ",
+            "departure_time": "05:20",
+            "arrival_airport": "YQM",
+            "arrival_time": "08:40",
+            "price": "181.72"
+        },
+        {
+            "airline": "AC",
+            "number": "330",
+            "departure_airport": "YYZ",
+            "departure_time": "05:05",
+            "arrival_airport": "YQR",
+            "arrival_time": "07:00",
+            "price": "272.06"
+        },
+        {
+            "airline": "AC",
+            "number": "331",
+            "departure_airport": "YYZ",
+            "departure_time": "11:20",
+            "arrival_airport": "YQT",
+            "arrival_time": "13:15",
+            "price": "149.25"
+        },
+        {
+            "airline": "AC",
+            "number": "332",
+            "departure_airport": "YYZ",
+            "departure_time": "10:25",
+            "arrival_airport": "YQY",
+            "arrival_time": "13:45",
+            "price": "220.85"
+        },
+        {
+            "airline": "AC",
+            "number": "333",
+            "departure_airport": "YYZ",
+            "departure_time": "09:35",
+            "arrival_airport": "YSB",
+            "arrival_time": "10:45",
+            "price": "86.44"
+        },
+        {
+            "airline": "AC",
+            "number": "334",
+            "departure_airport": "YYZ",
+            "departure_time": "16:05",
+            "arrival_airport": "YSJ",
+            "arrival_time": "19:15",
+            "price": "170.39"
+        },
+        {
+            "airline": "AC",
+            "number": "335",
+            "departure_airport": "YYZ",
+            "departure_time": "21:50",
+            "arrival_airport": "YTS",
+            "arrival_time": "23:10",
+            "price": "110.64"
+        },
+        {
+            "airline": "AC",
+            "number": "336",
+            "departure_airport": "YYZ",
+            "departure_time": "19:30",
+            "arrival_airport": "YUL",
+            "arrival_time": "20:45",
+            "price": "104.79"
+        },
+        {
+            "airline": "AC",
+            "number": "337",
+            "departure_airport": "YYZ",
+            "departure_time": "06:10",
+            "arrival_airport": "YVR",
+            "arrival_time": "07:35",
+            "price": "482.01"
+        },
+        {
+            "airline": "AC",
+            "number": "338",
+            "departure_airport": "YYZ",
+            "departure_time": "16:00",
+            "arrival_airport": "YWG",
+            "arrival_time": "17:15",
+            "price": "214.44"
+        },
+        {
+            "airline": "AC",
+            "number": "339",
+            "departure_airport": "YYZ",
+            "departure_time": "16:15",
+            "arrival_airport": "YXE",
+            "arrival_time": "18:20",
+            "price": "292.09"
+        },
+        {
+            "airline": "AC",
+            "number": "340",
+            "departure_airport": "YYZ",
+            "departure_time": "13:55",
+            "arrival_airport": "YXU",
+            "arrival_time": "14:40",
+            "price": "64.66"
+        },
+        {
+            "airline": "AC",
+            "number": "341",
+            "departure_airport": "YYZ",
+            "departure_time": "10:05",
+            "arrival_airport": "YYB",
+            "arrival_time": "11:10",
+            "price": "81.91"
+        },
+        {
+            "airline": "AC",
+            "number": "342",
+            "departure_airport": "YYZ",
+            "departure_time": "11:55",
+            "arrival_airport": "YYC",
+            "arrival_time": "13:35",
+            "price": "409.81"
+        },
+        {
+            "airline": "AC",
+            "number": "343",
+            "departure_airport": "YYZ",
+            "departure_time": "07:50",
+            "arrival_airport": "YYG",
+            "arrival_time": "11:25",
+            "price": "195.07"
+        },
+        {
+            "airline": "AC",
+            "number": "344",
+            "departure_airport": "YYZ",
+            "departure_time": "19:35",
+            "arrival_airport": "YYJ",
+            "arrival_time": "21:05",
+            "price": "484.73"
+        },
+        {
+            "airline": "AC",
+            "number": "345",
+            "departure_airport": "YYZ",
+            "departure_time": "10:40",
+            "arrival_airport": "YYT",
+            "arrival_time": "15:10",
+            "price": "282.58"
+        },
+        {
+            "airline": "AC",
+            "number": "346",
+            "departure_airport": "YYZ",
+            "departure_time": "19:50",
+            "arrival_airport": "YZR",
+            "arrival_time": "20:50",
+            "price": "74.23"
+        },
+        {
+            "airline": "AC",
+            "number": "347",
+            "departure_airport": "YZF",
+            "departure_time": "06:30",
+            "arrival_airport": "YEG",
+            "arrival_time": "08:35",
+            "price": "161.09"
+        },
+        {
+            "airline": "AC",
+            "number": "348",
+            "departure_airport": "YZF",
+            "departure_time": "14:10",
+            "arrival_airport": "YYC",
+            "arrival_time": "16:35",
+            "price": "187.84"
+        },
+        {
+            "airline": "AC",
+            "number": "349",
+            "departure_airport": "YZP",
+            "departure_time": "21:45",
+            "arrival_airport": "YVR",
+            "arrival_time": "23:25",
+            "price": "131.59"
+        },
+        {
+            "airline": "AC",
+            "number": "350",
+            "departure_airport": "YZR",
+            "departure_time": "08:00",
+            "arrival_airport": "YYZ",
+            "arrival_time": "09:00",
+            "price": "74.23"
+        },
+        {
+            "airline": "AC",
+            "number": "351",
+            "departure_airport": "YZV",
+            "departure_time": "13:10",
+            "arrival_airport": "YQB",
+            "arrival_time": "14:30",
+            "price": "108.04"
+        },
+        {
+            "airline": "AC",
+            "number": "352",
+            "departure_airport": "YZV",
+            "departure_time": "21:05",
+            "arrival_airport": "YUL",
+            "arrival_time": "22:45",
+            "price": "133.45"
+        },
+        {
+            "airline": "AC",
+            "number": "353",
+            "departure_airport": "YZV",
+            "departure_time": "11:00",
+            "arrival_airport": "YWK",
+            "arrival_time": "13:05",
+            "price": "82.32"
+        },
+        {
+            "airline": "AC",
+            "number": "354",
+            "departure_airport": "ZBF",
+            "departure_time": "11:40",
+            "arrival_airport": "YUL",
+            "arrival_time": "12:10",
+            "price": "121.26"
+        }
+    ]
+}
