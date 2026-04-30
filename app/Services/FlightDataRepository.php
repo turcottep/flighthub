@@ -2,11 +2,16 @@
 
 namespace App\Services;
 
+use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\DB;
 use RuntimeException;
 
 class FlightDataRepository
 {
+    private const BEST_DURATION_MINUTE_WEIGHT_CENTS = 35;
+
+    private const BEST_CONNECTION_PENALTY_CENTS = 7500;
+
     public function __construct(private readonly ?string $path = null) {}
 
     /**
@@ -69,6 +74,36 @@ class FlightDataRepository
             'airlines' => $this->loadAirlinesFromDatabase(),
             'airports' => $this->loadAirportsFromDatabase(),
             'flights' => $this->loadFlightsFromDatabase($departureAirportCodes),
+        ];
+    }
+
+    /**
+     * Load the compact route network needed for route search. Timed flights are fetched lazily per route pair.
+     *
+     * @return array{
+     *     airports: array<int, array<string, mixed>>,
+     *     routes: array<int, array{from: string, to: string, weight: int}>,
+     *     route_flight_resolver: callable(string, string, int, ?string): list<array<string, mixed>>
+     * }
+     */
+    public function loadRouteNetworkFromDatabase(): array
+    {
+        $airports = $this->loadAirportsFromDatabase();
+        $airportsByCode = [];
+
+        foreach ($airports as $airport) {
+            $airportsByCode[$airport['code']] = $airport;
+        }
+
+        return [
+            'airports' => $airports,
+            'routes' => $this->loadRouteSummariesFromDatabase($airportsByCode),
+            'route_flight_resolver' => fn (string $from, string $to, int $limit, ?string $airline): array => $this->loadFlightsForRouteFromDatabase(
+                $from,
+                $to,
+                $limit,
+                $airline,
+            ),
         ];
     }
 
@@ -245,6 +280,132 @@ class FlightDataRepository
                 'price' => number_format((float) $flight->price, 2, '.', ''),
             ])
             ->all();
+    }
+
+    /**
+     * @param array<string, array<string, mixed>> $airportsByCode
+     * @return list<array{from: string, to: string, weight: int}>
+     */
+    private function loadRouteSummariesFromDatabase(array $airportsByCode): array
+    {
+        $routes = [];
+        $rows = DB::table('flights')
+            ->select([
+                'departure_airport_code',
+                'arrival_airport_code',
+                DB::raw('MIN(price) as minimum_price'),
+            ])
+            ->groupBy('departure_airport_code', 'arrival_airport_code')
+            ->orderBy('departure_airport_code')
+            ->orderBy('arrival_airport_code')
+            ->cursor();
+
+        foreach ($rows as $row) {
+            $from = $row->departure_airport_code;
+            $to = $row->arrival_airport_code;
+
+            if (! isset($airportsByCode[$from], $airportsByCode[$to])) {
+                continue;
+            }
+
+            $estimatedDurationMinutes = max(30, (int) round($this->distanceKm(
+                (float) $airportsByCode[$from]['latitude'],
+                (float) $airportsByCode[$from]['longitude'],
+                (float) $airportsByCode[$to]['latitude'],
+                (float) $airportsByCode[$to]['longitude'],
+            ) / 850 * 60));
+
+            $routes[] = [
+                'from' => $from,
+                'to' => $to,
+                'weight' => $this->priceToCents($row->minimum_price)
+                    + ($estimatedDurationMinutes * self::BEST_DURATION_MINUTE_WEIGHT_CENTS)
+                    + self::BEST_CONNECTION_PENALTY_CENTS,
+            ];
+        }
+
+        return $routes;
+    }
+
+    /**
+     * @return list<array<string, mixed>>
+     */
+    private function loadFlightsForRouteFromDatabase(string $from, string $to, int $limit, ?string $airline): array
+    {
+        if ($limit < 1) {
+            return [];
+        }
+
+        $flights = $this->routeFlightQuery($from, $to)
+            ->limit($limit)
+            ->get([
+                'airline_code',
+                'number',
+                'departure_airport_code',
+                'departure_time',
+                'arrival_airport_code',
+                'arrival_time',
+                'price',
+            ])
+            ->map(fn (object $flight): array => $this->formatFlightRow($flight))
+            ->all();
+
+        if ($airline !== null) {
+            $preferredFlights = $this->routeFlightQuery($from, $to)
+                ->where('airline_code', strtoupper($airline))
+                ->limit($limit)
+                ->get([
+                    'airline_code',
+                    'number',
+                    'departure_airport_code',
+                    'departure_time',
+                    'arrival_airport_code',
+                    'arrival_time',
+                    'price',
+                ])
+                ->map(fn (object $flight): array => $this->formatFlightRow($flight))
+                ->all();
+
+            foreach ($preferredFlights as $flight) {
+                $flights[] = $flight;
+            }
+        }
+
+        $uniqueFlights = [];
+        foreach ($flights as $flight) {
+            $uniqueFlights[$flight['airline'].'|'.$flight['number']] = $flight;
+        }
+
+        return array_values($uniqueFlights);
+    }
+
+    private function routeFlightQuery(string $from, string $to): Builder
+    {
+        return DB::table('flights')
+            ->where('departure_airport_code', strtoupper($from))
+            ->where('arrival_airport_code', strtoupper($to))
+            ->orderBy('price')
+            ->orderBy('departure_time')
+            ->orderBy('airline_code')
+            ->orderBy('number');
+    }
+
+    private function formatFlightRow(object $flight): array
+    {
+        return [
+            'airline' => $flight->airline_code,
+            'number' => $flight->number,
+            'departure_airport' => $flight->departure_airport_code,
+            'departure_time' => substr((string) $flight->departure_time, 0, 5),
+            'arrival_airport' => $flight->arrival_airport_code,
+            'arrival_time' => substr((string) $flight->arrival_time, 0, 5),
+            'price' => number_format((float) $flight->price, 2, '.', ''),
+        ];
+    }
+
+    private function priceToCents(mixed $price): int
+    {
+        return (int) round((float) $price * 100);
     }
 
     private function distanceKm(float $fromLatitude, float $fromLongitude, float $toLatitude, float $toLongitude): float

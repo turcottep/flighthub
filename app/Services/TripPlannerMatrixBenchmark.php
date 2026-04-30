@@ -20,7 +20,7 @@ class TripPlannerMatrixBenchmark
      * @param  array<string, mixed>  $data
      */
     public function __construct(
-        private readonly TripPlannerV3 $planner,
+        private readonly TripPlannerV3|TripPlannerV4 $planner,
         private readonly array $data,
     ) {
         foreach ($data['airports'] ?? [] as $airport) {
@@ -38,12 +38,17 @@ class TripPlannerMatrixBenchmark
         }
     }
 
-    public static function fromDataPath(string $path, ?DateTimeImmutable $now = null): self
+    public static function fromDataPath(string $path, ?DateTimeImmutable $now = null, string $plannerVersion = 'v4'): self
     {
         $data = (new FlightDataRepository($path))->load();
+        $now ??= new DateTimeImmutable('2026-04-29 00:00:00 UTC');
 
         return new self(
-            new TripPlannerV3($data, $now ?? new DateTimeImmutable('2026-04-29 00:00:00 UTC')),
+            match ($plannerVersion) {
+                'v3' => new TripPlannerV3($data, $now),
+                'v4' => new TripPlannerV4($data, $now),
+                default => throw new InvalidArgumentException('plannerVersion must be v3 or v4.'),
+            },
             $data,
         );
     }
@@ -105,6 +110,7 @@ class TripPlannerMatrixBenchmark
             ...$this->directCases($perGroup),
             ...$this->oneStopCases($perGroup),
             ...$this->remoteCases($perGroup),
+            ...$this->remoteToRemoteCases($perGroup),
             ...$this->constrainedNoResultCases($perGroup),
             ...$this->cityCodeCases($perGroup),
             ...$this->nearbyCases($perGroup),
@@ -230,6 +236,49 @@ class TripPlannerMatrixBenchmark
                         'max_segments' => 6,
                         'max_results' => 5,
                         'max_duration_hours' => 120,
+                        'max_connections_scanned' => 500000,
+                        'sort' => 'best',
+                    ],
+                ];
+
+                if (count($cases) >= $limit) {
+                    return $cases;
+                }
+            }
+        }
+
+        return $cases;
+    }
+
+    /**
+     * @return list<array<string, mixed>>
+     */
+    private function remoteToRemoteCases(int $limit): array
+    {
+        $cases = [];
+        $remoteAirports = array_slice($this->remoteAirports(), 0, max(50, $limit * 10));
+
+        foreach ($remoteAirports as $origin) {
+            foreach ($remoteAirports as $destination) {
+                if ($origin === $destination) {
+                    continue;
+                }
+
+                $pathLength = $this->shortestStaticPathLength($origin, $destination, 6);
+                if ($pathLength === null || $pathLength < 3) {
+                    continue;
+                }
+
+                $cases[] = [
+                    'group' => 'remote_to_remote',
+                    'name' => "remote_to_remote_{$origin}_{$destination}",
+                    'type' => 'one_way',
+                    'origin' => $origin,
+                    'destination' => $destination,
+                    'options' => [
+                        'max_segments' => 6,
+                        'max_results' => 5,
+                        'max_duration_hours' => 168,
                         'max_connections_scanned' => 500000,
                         'sort' => 'best',
                     ],

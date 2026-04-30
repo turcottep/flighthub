@@ -53,12 +53,27 @@ Important indexes:
 
 These tables are reserved for persisted selected trips. Search results are assembled on demand and do not need to be written unless the user chooses or saves a trip.
 
+### `search_sessions` and `search_session_results`
+
+These tables back one-way search pagination.
+
+| Table | Notes |
+| --- | --- |
+| `search_sessions` | Stores a UUID search id, search type, normalized params hash, total result count, and expiry timestamp. |
+| `search_session_results` | Stores ordered itinerary JSON for each search id and page position. |
+
+Search sessions expire after 5 minutes. Expired rows can be pruned with:
+
+```bash
+php artisan trip-search-sessions:prune
+```
+
 ## Import Pipeline
 
 Generated data can be imported with:
 
 ```bash
-php artisan trip-data:import data/generated/trip_data_ac_ca.json --fresh
+php artisan trip-data:import data/generated/trip_data_full.json --fresh --chunk=2000
 ```
 
 The importer upserts:
@@ -67,10 +82,10 @@ The importer upserts:
 - airports by `code`
 - flights by `airline_code, number`
 
-Use `--chunk` to tune insert batch size:
+Use a different `--chunk` value to tune insert batch size:
 
 ```bash
-php artisan trip-data:import data/generated/trip_data_ac_ca.json --fresh --chunk=2000
+php artisan trip-data:import data/generated/trip_data_full.json --fresh --chunk=2000
 ```
 
 ## Generating Mock Data
@@ -78,7 +93,7 @@ php artisan trip-data:import data/generated/trip_data_ac_ca.json --fresh --chunk
 Raw data lives under `data/raw`. Generate deterministic assignment-style JSON with:
 
 ```bash
-php scripts/generate_trip_data.php --airline=AC --country=CA --output=data/generated/trip_data_ac_ca.json
+php scripts/generate_trip_data.php --max-routes=0 --frequency=realistic --output=data/generated/trip_data_full.json
 ```
 
 The raw datasets do not include real schedules, flight numbers, or fares. The generator creates those fields deterministically so repeated runs produce stable results.

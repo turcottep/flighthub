@@ -4,29 +4,70 @@ Full-stack coding assignment scaffolded as a production-like Laravel API with a 
 
 ## Stack
 
-- PHP 8.5 locally, PHP 8.4 container runtime, Laravel 13
+- PHP 8.3+ locally or PHP 8.4 in Docker, Laravel 13
 - React 19, TypeScript, Vite, Tailwind CSS
-- Local Postgres via Postgres.app
-- Optional Docker Compose with Nginx, PHP-FPM, Postgres, Redis, and Vite
+- Docker Compose with Nginx, PHP-FPM, Postgres, and Vite
+- Optional host setup with local Postgres or Postgres.app
 
-## Local Development
+## Local Setup
 
-The default local setup uses host PHP, Composer, Node, and local Postgres. This keeps local and production database behavior aligned without requiring Docker image downloads.
+The quickest cross-platform setup is Docker. It works on macOS, Windows with Docker Desktop/WSL2, and Linux without installing PHP, Composer, Node, or Postgres directly on the host machine.
 
 Prerequisites:
 
-- PHP 8.3+
-- Composer
-- Node 20+
-- Postgres.app or another local Postgres server
+- Docker Desktop on macOS/Windows, or Docker Engine on Linux
+- Git
 
-Start the app locally:
+Start the app:
 
 ```bash
+git clone https://github.com/turcottep/flighthub.git
+cd flighthub
+cp .env.docker.example .env.docker
+docker compose up -d --build
+docker compose exec app php artisan key:generate
+docker compose exec app php artisan migrate
+docker compose exec app php artisan trip-data:import data/generated/trip_data_full.json --fresh --chunk=2000
+```
+
+Open the app:
+
+```text
+http://localhost:8080
+```
+
+Useful Docker commands:
+
+```bash
+docker compose exec app php artisan test
+docker compose exec app php artisan optimize:clear
+docker compose down
+```
+
+## Host PHP Setup
+
+Use this path if you prefer running PHP, Node, and Postgres directly on your machine instead of Docker.
+
+Prerequisites:
+
+- PHP 8.3+ with the `pdo_pgsql`, `intl`, and `zip` extensions
+- Composer
+- Node 20+
+- PostgreSQL 16+ or Postgres.app
+- Git
+
+Install and run:
+
+```bash
+git clone https://github.com/turcottep/flighthub.git
+cd flighthub
 cp .env.example .env
-createdb -h 127.0.0.1 -p 5432 flighthub
+composer install
+npm ci
 php artisan key:generate
+createdb -h 127.0.0.1 -p 5432 -U postgres flighthub
 php artisan migrate
+php artisan trip-data:import data/generated/trip_data_full.json --fresh --chunk=2000
 npm run build
 php artisan serve
 ```
@@ -37,7 +78,9 @@ Open the app:
 http://localhost:8000
 ```
 
-For hot reload, run Vite in another terminal:
+If your local Postgres user is not `postgres`, update `DB_USERNAME` and `DB_PASSWORD` in `.env` before running migrations. Postgres.app on macOS often uses your macOS username with no password.
+
+For hot reload, keep Laravel running and start Vite in another terminal:
 
 ```bash
 npm run dev
@@ -47,8 +90,10 @@ Useful commands:
 
 ```bash
 php artisan test
-php artisan migrate:fresh --seed
+php artisan migrate:fresh
+php artisan trip-data:import data/generated/trip_data_full.json --fresh --chunk=2000
 npm run build
+php -d memory_limit=1536M scripts/benchmark_trip_planner_matrix.php --planner=v4 --per-group=5 --repeats=2 --warmups=1
 ```
 
 Frontend flight data source:
@@ -58,7 +103,7 @@ VITE_FLIGHT_DATA_SOURCE=backend
 ```
 
 Use `backend` to call the Laravel/Postgres APIs. Use `mock` to keep all search
-logic in the browser against `data/generated/trip_data_ac_ca.json` for fast UI
+logic in the browser against `data/generated/trip_data_full.json` for fast UI
 iteration without a database.
 
 If you cannot run Postgres locally, SQLite still works as a temporary fallback by setting:
@@ -67,21 +112,8 @@ If you cannot run Postgres locally, SQLite still works as a temporary fallback b
 DB_CONNECTION=sqlite
 ```
 
-## Docker Development
-
-The repo also includes a production-shaped Docker Compose setup with Nginx, PHP-FPM, Postgres, Redis, and Vite. It uses the same service boundaries as a deployable stack, while keeping bind mounts and Vite hot reload for local iteration. Docker uses `.env.docker` instead of the host `.env`, so local tokens and machine-specific settings do not leak into container config.
-
-```bash
-cp .env.docker.example .env.docker
-docker compose up -d --build
-docker compose exec app php artisan key:generate
-docker compose exec app php artisan migrate
-docker compose exec app php artisan trip-data:import data/generated/trip_data_ac_ca.json --fresh
-```
-
 Docker app URL: `http://localhost:8080`
-Postgres host port: `15432`
-Redis host port: `16379`
+Docker Postgres host port: `15432`
 
 ## Assignment References
 

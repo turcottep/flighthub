@@ -10,6 +10,7 @@ require __DIR__.'/../vendor/autoload.php';
 $options = getopt('', [
     'data::',
     'per-group::',
+    'planner::',
     'repeats::',
     'warmups::',
     'json',
@@ -23,6 +24,7 @@ Usage:
 
 Options:
   --data=PATH       Trip data JSON path. Default: data/generated/trip_data_full.json
+  --planner=v3|v4   Planner implementation to benchmark. Default: v4
   --per-group=N     Queries sampled per benchmark group. Default: 20
   --repeats=N       Timed runs per query. Default: 3
   --warmups=N       Warmup runs per query before timing. Default: 1
@@ -36,14 +38,16 @@ TXT);
 ini_set('memory_limit', '1536M');
 
 $dataPath = $options['data'] ?? (__DIR__.'/../data/generated/trip_data_full.json');
+$plannerVersion = strtolower((string) ($options['planner'] ?? 'v4'));
 $perGroup = isset($options['per-group']) ? (int) $options['per-group'] : 20;
 $repeats = isset($options['repeats']) ? (int) $options['repeats'] : 3;
 $warmups = isset($options['warmups']) ? (int) $options['warmups'] : 1;
 
 $startedAt = hrtime(true);
-$benchmark = TripPlannerMatrixBenchmark::fromDataPath($dataPath);
+$benchmark = TripPlannerMatrixBenchmark::fromDataPath($dataPath, plannerVersion: $plannerVersion);
 $setupMs = (hrtime(true) - $startedAt) / 1_000_000;
 $report = $benchmark->run($perGroup, $repeats, $warmups);
+$report['planner'] = $plannerVersion;
 $report['setup_ms'] = round($setupMs, 2);
 $report['peak_memory_mb'] = round(memory_get_peak_usage(true) / 1_048_576, 1);
 
@@ -53,7 +57,8 @@ if (isset($options['json'])) {
 }
 
 printf(
-    "TripPlanner matrix benchmark\nData: %d airlines, %d airports, %d flights\nSetup: %.2f ms, peak memory: %.1f MB\nQueries: %d, timed executions: %d, repeats: %d, warmups: %d\n\n",
+    "TripPlanner matrix benchmark (%s)\nData: %d airlines, %d airports, %d flights\nSetup: %.2f ms, peak memory: %.1f MB\nQueries: %d, timed executions: %d, repeats: %d, warmups: %d\n\n",
+    $report['planner'],
     $report['data']['airlines'],
     $report['data']['airports'],
     $report['data']['flights'],

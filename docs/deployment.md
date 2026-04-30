@@ -15,7 +15,7 @@ Deploy the app as a Docker web service with `Dockerfile.prod` and a managed Rend
 Set these on the Render web service:
 
 ```env
-APP_NAME=FlightHub Trip Builder
+APP_NAME="FlightHub Trip Builder"
 APP_ENV=production
 APP_DEBUG=false
 APP_URL=https://YOUR_RENDER_SERVICE.onrender.com
@@ -45,8 +45,16 @@ php artisan key:generate --show
 Run this in the Render web service shell:
 
 ```bash
-php artisan migrate --force && php artisan trip-data:import data/generated/trip_data_full.json --fresh && php artisan optimize
+php artisan migrate --force && php artisan trip-data:import data/generated/trip_data_full.json --fresh --chunk=2000 && php artisan optimize
 ```
+
+Trip result pagination uses 5-minute Postgres-backed search sessions. To prune expired pagination snapshots on Render, add a Render Cron Job or run the command from a worker on a schedule:
+
+```bash
+php artisan trip-search-sessions:prune
+```
+
+The app also enforces expiry on read, so stale `search_id` requests fail even if the prune job has not run yet.
 
 Then open:
 

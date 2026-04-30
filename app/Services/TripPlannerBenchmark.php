@@ -77,9 +77,9 @@ class TripPlannerBenchmark
                 'description' => 'Likely no-result YUL -> ZNZ',
             ],
             [
-                'name' => 'airline_filtered',
+                'name' => 'airline_preferred',
                 'type' => 'one_way',
-                'description' => 'Airline-filtered YUL -> YVR on AC',
+                'description' => 'Airline-preferred YUL -> YVR on AC',
             ],
         ];
     }
@@ -225,7 +225,7 @@ class TripPlannerBenchmark
                 'max_expansions' => 3000,
                 'sort' => 'best',
             ]),
-            'airline_filtered' => $this->planner->searchOneWay('YUL', 'YVR', '2026-05-15', [
+            'airline_preferred' => $this->planner->searchOneWay('YUL', 'YVR', '2026-05-15', [
                 'airline' => 'AC',
                 'max_stops' => 1,
                 'max_results' => 20,

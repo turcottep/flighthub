@@ -24,6 +24,79 @@ class TripSearchApiTest extends TestCase
             ->assertJsonPath('data.0.segments.0.arrival_airport', 'YVR');
     }
 
+    public function test_one_way_search_fetches_flights_lazily_by_route_pair(): void
+    {
+        $this->seedTripData(includeWbmRoute: true);
+        $queries = [];
+
+        DB::listen(function (object $query) use (&$queries): void {
+            $queries[] = $query->sql;
+        });
+
+        $response = $this->getJson('/api/trips/search/one-way?origin=YUL&destination=WBM&departure_date=2026-05-01&max_results=5');
+
+        $response->assertOk();
+
+        $flightRowQueries = array_values(array_filter(
+            $queries,
+            fn (string $sql): bool => str_contains($sql, 'from "flights"')
+                && str_contains($sql, 'select "airline_code", "number"'),
+        ));
+
+        $this->assertNotEmpty($flightRowQueries);
+
+        foreach ($flightRowQueries as $sql) {
+            $this->assertStringContainsString('where "departure_airport_code" = ?', $sql);
+            $this->assertStringContainsString('"arrival_airport_code" = ?', $sql);
+            $this->assertStringNotContainsString('where "departure_airport_code" in', $sql);
+        }
+    }
+
+    public function test_preferred_airline_does_not_filter_out_database_routes(): void
+    {
+        $this->seedTripData();
+
+        $response = $this->getJson('/api/trips/search/one-way?origin=YUL&destination=YYZ&departure_date=2026-05-01&airline=WS&max_results=5&max_segments=2');
+
+        $response
+            ->assertOk()
+            ->assertJsonPath('data.0.destination', 'YYZ')
+            ->assertJsonPath('data.0.segments.0.airline', 'AC');
+    }
+
+    public function test_search_results_can_be_paged_from_a_stored_search_session(): void
+    {
+        $this->seedTripData();
+        DB::table('flights')->insert([
+            'airline_code' => 'AC',
+            'number' => '304',
+            'departure_airport_code' => 'YUL',
+            'departure_time' => '09:35',
+            'arrival_airport_code' => 'YVR',
+            'arrival_time' => '12:05',
+            'price' => '300.00',
+        ]);
+
+        $firstPage = $this->getJson('/api/trips/search/one-way?origin=YUL&destination=YVR&departure_date=2026-05-01&max_results=5&per_page=1');
+        $searchId = $firstPage->json('meta.pagination.search_id');
+
+        $firstPage
+            ->assertOk()
+            ->assertJsonPath('meta.pagination.page', 1)
+            ->assertJsonPath('meta.pagination.per_page', 1)
+            ->assertJsonPath('meta.pagination.total', 2)
+            ->assertJsonPath('meta.pagination.total_pages', 2)
+            ->assertJsonCount(1, 'data');
+
+        $secondPage = $this->getJson("/api/trips/search/one-way?search_id={$searchId}&page=2&per_page=1");
+
+        $secondPage
+            ->assertOk()
+            ->assertJsonPath('meta.pagination.search_id', $searchId)
+            ->assertJsonPath('meta.pagination.page', 2)
+            ->assertJsonPath('data.0.segments.0.flight_number', 'AC304');
+    }
+
     public function test_round_trip_search_uses_database_flight_data(): void
     {
         $this->seedTripData();
@@ -32,9 +105,23 @@ class TripSearchApiTest extends TestCase
 
         $response
             ->assertOk()
-            ->assertJsonPath('data.0.type', 'round_trip')
-            ->assertJsonPath('data.0.legs.0.type', 'outbound')
-            ->assertJsonPath('data.0.legs.1.type', 'return');
+            ->assertJsonPath('data.type', 'round_trip')
+            ->assertJsonPath('data.legs.0.type', 'outbound')
+            ->assertJsonPath('data.legs.0.options.0.type', 'one_way')
+            ->assertJsonPath('data.legs.0.options.0.destination', 'YVR')
+            ->assertJsonPath('data.legs.1.type', 'return')
+            ->assertJsonPath('data.legs.1.options.0.destination', 'YUL');
+    }
+
+    public function test_round_trip_search_rejects_return_date_before_departure_date(): void
+    {
+        $this->seedTripData();
+
+        $response = $this->getJson('/api/trips/search/round-trip?origin=YUL&destination=YVR&departure_date=2026-05-10&return_date=2026-05-01&max_results=5');
+
+        $response
+            ->assertUnprocessable()
+            ->assertJsonValidationErrors(['return_date']);
     }
 
     public function test_nearby_one_way_search_uses_nearby_airports(): void
@@ -58,10 +145,21 @@ class TripSearchApiTest extends TestCase
 
         $response
             ->assertOk()
-            ->assertJsonPath('data.0.type', 'open_jaw')
-            ->assertJsonPath('data.0.legs.0.type', 'outbound')
-            ->assertJsonPath('data.0.legs.1.type', 'return')
-            ->assertJsonPath('data.0.legs.1.itinerary.destination', 'YYZ');
+            ->assertJsonPath('data.type', 'open_jaw')
+            ->assertJsonPath('data.legs.0.type', 'outbound')
+            ->assertJsonPath('data.legs.1.type', 'return')
+            ->assertJsonPath('data.legs.1.options.0.destination', 'YYZ');
+    }
+
+    public function test_open_jaw_search_rejects_return_date_before_departure_date(): void
+    {
+        $this->seedTripData();
+
+        $response = $this->getJson('/api/trips/search/open-jaw?origin=YUL&outbound_destination=YVR&return_origin=YVR&final_destination=YYZ&departure_date=2026-05-10&return_date=2026-05-01&max_results=5');
+
+        $response
+            ->assertUnprocessable()
+            ->assertJsonValidationErrors(['return_date']);
     }
 
     public function test_multi_city_search_uses_database_flight_data(): void
@@ -88,13 +186,14 @@ class TripSearchApiTest extends TestCase
 
         $response
             ->assertOk()
-            ->assertJsonPath('data.0.type', 'multi_city')
-            ->assertJsonPath('data.0.legs.0.type', 'leg_1')
-            ->assertJsonPath('data.0.legs.1.type', 'leg_2')
-            ->assertJsonPath('data.0.destination', 'YYZ');
+            ->assertJsonPath('data.type', 'multi_city')
+            ->assertJsonPath('data.legs.0.type', 'leg_1')
+            ->assertJsonPath('data.legs.1.type', 'leg_2')
+            ->assertJsonPath('data.legs.0.options.0.destination', 'YVR')
+            ->assertJsonPath('data.legs.1.options.0.destination', 'YYZ');
     }
 
-    public function test_one_way_search_finds_multi_connection_remote_destination_with_v3(): void
+    public function test_one_way_search_finds_multi_connection_remote_destination_with_production_planner(): void
     {
         $this->seedTripData(includeWbmRoute: true);
 

@@ -252,6 +252,244 @@ button {
     align-items: end;
 }
 
+.search-grid-open-jaw {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.search-grid-open-jaw .search-button {
+    grid-column: span 2;
+}
+
+.search-options {
+    display: flex;
+    min-height: 32px;
+    align-items: center;
+    gap: 18px;
+    margin-top: 14px;
+}
+
+.advanced-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    border: 0;
+    background: transparent;
+    color: var(--blue);
+    font-size: 14px;
+    font-weight: 850;
+    padding: 0;
+}
+
+.advanced-toggle svg {
+    transition: transform 0.16s ease;
+}
+
+.advanced-toggle svg.open {
+    transform: rotate(180deg);
+}
+
+.advanced-options {
+    display: grid;
+    width: 100%;
+    max-width: 280px;
+    min-width: 0;
+    margin-top: 14px;
+}
+
+.advanced-select {
+    display: grid;
+    min-width: 0;
+    gap: 6px;
+    color: #475467;
+    font-size: 12px;
+    font-weight: 850;
+    text-transform: uppercase;
+}
+
+.airline-select {
+    position: relative;
+}
+
+.airline-control {
+    display: grid;
+    min-height: 42px;
+    grid-template-columns: minmax(0, 1fr) 22px;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: #fff;
+    padding: 0 10px 0 12px;
+}
+
+.airline-control:focus-within {
+    border-color: var(--blue);
+    box-shadow: 0 0 0 4px rgba(21, 112, 239, 0.12);
+}
+
+.airline-control input {
+    min-height: 42px;
+    width: 100%;
+    min-width: 0;
+    border: 0;
+    background: #fff;
+    color: var(--ink);
+    font-size: 15px;
+    font-weight: 750;
+    outline: 0;
+    padding: 0;
+    text-transform: none;
+}
+
+.airline-control svg {
+    color: #475467;
+    transition: transform 0.16s ease;
+}
+
+.airline-control svg.open {
+    transform: rotate(180deg);
+}
+
+.airline-dropdown {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    left: 0;
+    z-index: 90;
+    overflow: auto;
+    max-height: 280px;
+    border: 1px solid var(--soft-line);
+    border-radius: 12px;
+    background: #fff;
+    box-shadow: 0 18px 42px rgba(16, 24, 40, 0.18);
+}
+
+.airline-dropdown button {
+    display: grid;
+    width: 100%;
+    grid-template-columns: 52px minmax(0, 1fr);
+    gap: 10px;
+    align-items: center;
+    border: 0;
+    border-bottom: 1px solid var(--soft-line);
+    background: #fff;
+    color: #344054;
+    font-size: 14px;
+    font-weight: 700;
+    padding: 11px 13px;
+    text-align: left;
+}
+
+.airline-dropdown button:first-child {
+    display: block;
+    color: var(--ink);
+}
+
+.airline-dropdown button:last-child {
+    border-bottom: 0;
+}
+
+.airline-dropdown button:hover,
+.airline-dropdown button:focus {
+    background: #f4f8ff;
+}
+
+.airline-dropdown strong {
+    color: var(--ink);
+    font-weight: 850;
+}
+
+.airline-dropdown span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-transform: none;
+}
+
+.check-option {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    color: #344054;
+    font-size: 14px;
+    font-weight: 750;
+}
+
+.check-option input {
+    width: 17px;
+    height: 17px;
+    accent-color: var(--blue);
+}
+
+.radius-field {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #475467;
+    font-size: 13px;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.radius-field input {
+    min-height: 36px;
+    width: 78px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    color: var(--ink);
+    font-weight: 750;
+    padding: 0 10px;
+}
+
+.radius-field span {
+    color: #667085;
+    text-transform: none;
+}
+
+.multi-city-fields {
+    display: grid;
+    gap: 12px;
+}
+
+.multi-city-leg {
+    display: grid;
+    grid-template-columns: 76px minmax(0, 1.25fr) minmax(0, 1.25fr) minmax(150px, 0.8fr) 42px;
+    gap: 12px;
+    align-items: end;
+}
+
+.leg-index {
+    align-self: center;
+    color: #475467;
+    font-size: 13px;
+    font-weight: 850;
+    text-transform: uppercase;
+}
+
+.remove-leg-button {
+    display: grid;
+    min-height: 46px;
+    width: 42px;
+    place-items: center;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: #fff;
+    color: #475467;
+}
+
+.remove-leg-button:disabled {
+    cursor: not-allowed;
+    opacity: 0.4;
+}
+
+.multi-city-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding-top: 4px;
+}
+
 .airport-field select {
     font-size: 16px;
 }
@@ -413,8 +651,301 @@ button {
     gap: 14px;
 }
 
+.pagination-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    border: 1px solid var(--soft-line);
+    border-radius: 8px;
+    background: #fff;
+    padding: 14px;
+}
+
+.pagination-controls span {
+    min-width: 110px;
+    color: #475467;
+    font-size: 14px;
+    font-weight: 800;
+    text-align: center;
+}
+
+.pagination-controls button:disabled {
+    cursor: not-allowed;
+    opacity: 0.45;
+}
+
+.pagination-controls button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+.pagination-icon-button {
+    width: 40px;
+    padding-right: 0;
+    padding-left: 0;
+}
+
+.trip-builder-results {
+    display: grid;
+    gap: 22px;
+    scroll-margin-top: 74px;
+}
+
+.trip-builder-summary {
+    display: grid;
+    grid-template-areas:
+        "summary stats"
+        "stepper stepper";
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 20px;
+    align-items: start;
+    border: 1px solid var(--soft-line);
+    border-radius: 8px;
+    background: #fff;
+    padding: 18px;
+}
+
+.trip-summary-primary {
+    grid-area: summary;
+    min-width: 0;
+}
+
+.trip-summary-subtitle {
+    margin: 4px 0 0;
+    color: #667085;
+    font-size: 13px;
+    font-weight: 750;
+}
+
+.trip-builder-summary h3 {
+    margin: 4px 0 0;
+    color: var(--ink);
+    font-size: 24px;
+    line-height: 1.15;
+}
+
+.trip-stepper {
+    grid-area: stepper;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(148px, 1fr));
+    gap: 8px;
+}
+
+.trip-stepper button {
+    display: grid;
+    min-height: 48px;
+    min-width: 0;
+    grid-template-columns: 22px minmax(0, 1fr);
+    gap: 8px;
+    align-items: center;
+    border: 1px solid var(--soft-line);
+    border-radius: 8px;
+    background: #fff;
+    color: #475467;
+    font-size: 13px;
+    font-weight: 800;
+    padding: 8px 12px 8px 8px;
+    text-align: left;
+}
+
+.trip-stepper button.active {
+    border-color: var(--blue);
+    color: var(--blue);
+    box-shadow: 0 0 0 3px rgba(21, 112, 239, 0.1);
+}
+
+.trip-stepper span {
+    display: inline-grid;
+    width: 22px;
+    height: 22px;
+    place-items: center;
+    border-radius: 999px;
+    background: #eef4ff;
+    color: var(--blue);
+    font-size: 12px;
+    font-weight: 850;
+}
+
+.trip-stepper strong,
+.trip-stepper small {
+    overflow: hidden;
+    min-width: 0;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.trip-stepper strong {
+    color: var(--ink);
+    font-weight: 850;
+}
+
+.trip-stepper small {
+    grid-column: 2;
+    color: #667085;
+    font-size: 12px;
+    font-weight: 750;
+}
+
+.trip-builder-summary dl {
+    grid-area: stats;
+    display: flex;
+    gap: 18px;
+    margin: 0;
+}
+
+.trip-builder-summary dt {
+    color: #667085;
+    font-size: 11px;
+    font-weight: 850;
+    text-transform: uppercase;
+}
+
+.trip-builder-summary dd {
+    margin: 4px 0 0;
+    color: var(--ink);
+    font-size: 15px;
+    font-weight: 850;
+}
+
+.leg-option-section {
+    display: grid;
+    gap: 14px;
+}
+
+.leg-option-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 0 2px;
+}
+
+.leg-option-heading h3 {
+    margin: 4px 0;
+    color: var(--ink);
+    font-size: 22px;
+    line-height: 1.2;
+}
+
+.leg-option-heading span {
+    color: #667085;
+    font-size: 14px;
+    font-weight: 750;
+}
+
+.leg-sort-tabs {
+    display: inline-grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    overflow: hidden;
+    min-width: 220px;
+    border: 1px solid var(--soft-line);
+    border-radius: 8px;
+    background: #eef2f7;
+    padding: 4px;
+}
+
+.leg-sort-tabs button {
+    min-height: 34px;
+    border: 0;
+    border-radius: 6px;
+    background: transparent;
+    color: #475467;
+    font-size: 13px;
+    font-weight: 850;
+}
+
+.leg-sort-tabs button.active {
+    background: #fff;
+    color: var(--blue);
+    box-shadow: 0 1px 4px rgba(16, 24, 40, 0.12);
+}
+
+.leg-step-actions {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding-top: 2px;
+}
+
+.leg-step-actions .select-button {
+    min-width: 150px;
+}
+
+.trip-review {
+    display: grid;
+    gap: 16px;
+    border: 1px solid var(--soft-line);
+    border-radius: 8px;
+    background: #fff;
+    padding: 18px;
+}
+
+.trip-review-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    border-bottom: 1px solid var(--soft-line);
+    padding-bottom: 16px;
+}
+
+.trip-review-heading h3 {
+    margin: 4px 0;
+    color: var(--ink);
+    font-size: 30px;
+    line-height: 1;
+}
+
+.trip-review-heading span {
+    color: #667085;
+    font-size: 14px;
+    font-weight: 750;
+}
+
+.trip-review-legs {
+    display: grid;
+    gap: 14px;
+}
+
+.trip-review-legs article {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 8px 16px;
+    align-items: center;
+    border: 1px solid var(--soft-line);
+    border-radius: 8px;
+    padding: 14px;
+}
+
+.trip-review-legs h4 {
+    margin: 4px 0 0;
+    color: var(--ink);
+    font-size: 18px;
+}
+
+.trip-review-legs .trip-leg {
+    grid-column: 1 / -1;
+    padding: 8px 0 0;
+}
+
+.trip-review-price {
+    grid-row: 1 / span 2;
+    grid-column: 2;
+    color: var(--ink);
+    font-size: 20px;
+    font-weight: 850;
+}
+
 .itinerary-card {
     overflow: hidden;
+}
+
+.itinerary-card.selected {
+    border-color: var(--blue);
+    box-shadow: 0 0 0 3px rgba(21, 112, 239, 0.12);
 }
 
 .itinerary-body {
@@ -589,6 +1120,12 @@ button {
     background: var(--blue);
     color: #fff;
     font-weight: 850;
+}
+
+.itinerary-card.selected .select-button {
+    border-color: var(--blue);
+    background: #fff;
+    color: var(--blue);
 }
 
 .select-button:hover {
@@ -892,19 +1429,27 @@ button {
     bottom: -46px;
     border: 1px solid var(--soft-line);
     border-radius: 22px;
-    padding: 0;
+    padding: 0 48px 44px;
 }
 
 .form-topline {
-    margin: 36px 48px 16px;
+    margin: 36px 0 16px;
 }
 
 .search-grid {
-    padding: 0 48px 44px;
+    padding: 0;
 }
 
 .airport-field {
     position: relative;
+}
+
+.airport-field > label {
+    color: #475467;
+    font-size: 12px;
+    font-weight: 850;
+    line-height: 16px;
+    text-transform: uppercase;
 }
 
 .airport-field:focus-within {
@@ -925,6 +1470,18 @@ button {
     padding: 8px 12px 8px 18px;
 }
 
+.date-trigger,
+.search-button {
+    min-height: 58px;
+}
+
+.date-trigger {
+    border-radius: 10px;
+    padding: 0 18px;
+    font-size: 16px;
+    font-weight: 760;
+}
+
 .airport-control:focus-within {
     border-color: var(--blue);
     box-shadow: 0 0 0 4px rgba(21, 112, 239, 0.12);
@@ -938,20 +1495,11 @@ button {
 .airport-input-stack {
     display: grid;
     min-width: 0;
-    gap: 2px;
-    text-transform: none;
-}
-
-.airport-input-stack label {
-    color: #667085;
-    font-size: 12px;
-    font-weight: 800;
-    line-height: 1;
     text-transform: none;
 }
 
 .airport-control .airport-input {
-    min-height: 25px;
+    min-height: 38px;
     width: 100%;
     background: #fff;
     border: 0;
@@ -1232,6 +1780,164 @@ button {
     line-height: 1.6;
 }
 
+.flight-network-map {
+    grid-column: 1 / -1;
+    display: grid;
+    gap: 18px;
+    border-top: 1px solid #d9e1ec;
+    padding-top: 36px;
+}
+
+.flight-network-map h3 {
+    margin: 8px 0 0;
+    font-size: 24px;
+    line-height: 1.18;
+}
+
+.flight-network-map img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border: 1px solid #cbd7e6;
+    border-radius: 8px;
+    background: #f8fbff;
+}
+
+.testing-summary {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: minmax(240px, 0.58fr) minmax(0, 1fr);
+    gap: 32px;
+    border-top: 1px solid #d9e1ec;
+    padding-top: 36px;
+}
+
+.testing-summary h3 {
+    margin: 8px 0 0;
+    font-size: 24px;
+    line-height: 1.18;
+}
+
+.testing-summary p:not(.eyebrow) {
+    margin: 14px 0 0;
+    color: #5b6678;
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+.testing-layers {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1px;
+    overflow: hidden;
+    border: 1px solid #cbd7e6;
+    border-radius: 8px;
+    background: #cbd7e6;
+}
+
+.testing-layers article {
+    background: #f8fbff;
+    padding: 20px;
+}
+
+.testing-layers strong {
+    display: inline-flex;
+    min-height: 28px;
+    align-items: center;
+    border-radius: 999px;
+    background: #e8f1ff;
+    color: var(--blue);
+    font-size: 12px;
+    font-weight: 850;
+    padding: 0 10px;
+}
+
+.testing-layers h4 {
+    margin: 14px 0 8px;
+    color: #10243f;
+    font-size: 17px;
+    line-height: 1.2;
+}
+
+.testing-layers p {
+    margin: 0 0 8px;
+    color: #5b6678;
+    font-size: 13px;
+    line-height: 1.55;
+}
+
+.algorithm-evolution {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: minmax(240px, 0.55fr) minmax(0, 1fr);
+    gap: 32px;
+    border-top: 1px solid #d9e1ec;
+    padding-top: 36px;
+}
+
+.algorithm-evolution h3 {
+    margin: 8px 0 0;
+    font-size: 24px;
+    line-height: 1.18;
+}
+
+.algorithm-evolution > div > p:not(.eyebrow) {
+    margin: 14px 0 0;
+    color: #5b6678;
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+.algorithm-timeline {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1px;
+    overflow: hidden;
+    border: 1px solid #d9e1ec;
+    border-radius: 8px;
+    background: #d9e1ec;
+}
+
+.algorithm-timeline article {
+    background: #fff;
+    padding: 22px;
+}
+
+.algorithm-timeline strong {
+    display: inline-flex;
+    min-width: 44px;
+    height: 30px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    background: #ecfdf3;
+    color: var(--green);
+    font-size: 13px;
+    font-weight: 850;
+}
+
+.algorithm-timeline h4 {
+    margin: 16px 0 8px;
+    font-size: 17px;
+    line-height: 1.2;
+}
+
+.algorithm-timeline em {
+    display: block;
+    margin-bottom: 12px;
+    color: var(--green);
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 850;
+}
+
+.algorithm-timeline p {
+    margin: 0;
+    color: #5b6678;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
 .filter-heading {
     padding: 24px 0;
 }
@@ -1294,14 +2000,8 @@ button {
 }
 
 .trip-leg {
-    grid-template-columns: 22px 42px 76px minmax(0, 1fr);
+    grid-template-columns: 42px 76px minmax(0, 1fr);
     align-items: center;
-}
-
-.trip-leg > input {
-    width: 18px;
-    height: 18px;
-    margin: 0;
 }
 
 .trip-leg > .airline-logo,
@@ -1320,12 +2020,37 @@ button {
         max-width: 760px;
     }
 
-    .search-grid,
-    .form-topline {
-        margin-right: 18px;
-        margin-left: 18px;
-        padding-right: 0;
-        padding-left: 0;
+    .algorithm-evolution {
+        grid-template-columns: 1fr;
+    }
+
+    .testing-summary {
+        grid-template-columns: 1fr;
+    }
+
+    .testing-layers {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .search-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .search-button {
+        grid-column: span 2;
+    }
+
+    .multi-city-leg {
+        grid-template-columns: 76px minmax(0, 1fr) minmax(0, 1fr);
+    }
+
+    .multi-city-leg .date-picker-field {
+        grid-column: 2;
+    }
+
+    .remove-leg-button {
+        grid-column: 3;
+        justify-self: end;
     }
 }
 
@@ -1390,12 +2115,12 @@ button {
     .search-panel {
         bottom: -24px;
         border-radius: 14px;
-        padding: 0;
+        padding: 0 18px 22px;
     }
 
     .form-topline {
         gap: 18px;
-        margin: 18px 18px 16px;
+        margin: 18px 0 16px;
     }
 
     .trip-toggle {
@@ -1405,9 +2130,11 @@ button {
     }
 
     .trip-toggle button {
+        min-width: 0;
         min-height: 48px;
         border-radius: 10px;
-        font-size: 16px;
+        padding: 9px 8px;
+        font-size: 15px;
     }
 
     .compact-fields {
@@ -1432,9 +2159,70 @@ button {
     }
 
     .search-grid {
+        grid-template-columns: 1fr;
         gap: 12px;
-        margin: 0 18px;
-        padding: 0 0 22px;
+        margin: 0;
+        padding: 0;
+    }
+
+    .search-button,
+    .search-grid-open-jaw .search-button {
+        grid-column: auto;
+    }
+
+    .search-options {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 10px;
+        margin-top: 14px;
+    }
+
+    .advanced-options {
+        max-width: none;
+    }
+
+    .airline-control {
+        min-height: 52px;
+        border-radius: 12px;
+    }
+
+    .airline-control input {
+        min-height: 52px;
+        font-size: 16px;
+    }
+
+    .airline-dropdown {
+        max-height: 260px;
+    }
+
+    .radius-field {
+        width: 100%;
+        justify-content: flex-start;
+    }
+
+    .multi-city-leg {
+        grid-template-columns: minmax(0, 1fr) 42px;
+        gap: 10px;
+    }
+
+    .multi-city-leg .airport-field,
+    .multi-city-leg .date-picker-field {
+        grid-column: 1 / -1;
+    }
+
+    .leg-index {
+        grid-column: 1;
+    }
+
+    .remove-leg-button {
+        grid-column: 2;
+        grid-row: 1;
+        justify-self: end;
+    }
+
+    .multi-city-actions {
+        align-items: stretch;
+        flex-direction: column;
     }
 
     .airport-control {
@@ -1442,10 +2230,6 @@ button {
         grid-template-columns: 38px minmax(0, 1fr) 32px;
         gap: 12px;
         padding: 10px 14px 10px 18px;
-    }
-
-    .airport-input-stack label {
-        font-size: 13px;
     }
 
     .airport-dropdown {
@@ -1504,6 +2288,33 @@ button {
 
     .approach-notes section {
         min-height: auto;
+        padding: 20px;
+    }
+
+    .algorithm-evolution {
+        gap: 20px;
+        padding-top: 28px;
+    }
+
+    .flight-network-map {
+        gap: 14px;
+        padding-top: 28px;
+    }
+
+    .testing-summary {
+        gap: 20px;
+        padding-top: 28px;
+    }
+
+    .testing-layers {
+        grid-template-columns: 1fr;
+    }
+
+    .algorithm-timeline {
+        grid-template-columns: 1fr;
+    }
+
+    .algorithm-timeline article {
         padding: 20px;
     }
 
@@ -1569,6 +2380,71 @@ button {
         font-size: 18px;
     }
 
+    .trip-builder-results {
+        gap: 18px;
+    }
+
+    .trip-builder-summary {
+        grid-template-areas:
+            "summary"
+            "stats"
+            "stepper";
+        grid-template-columns: 1fr;
+        margin: 0 24px;
+    }
+
+    .trip-stepper {
+        overflow-x: auto;
+        grid-template-columns: none;
+        grid-auto-flow: column;
+        grid-auto-columns: minmax(148px, 180px);
+        padding-bottom: 2px;
+    }
+
+    .trip-stepper button {
+        flex: 0 0 auto;
+    }
+
+    .trip-builder-summary dl {
+        justify-content: space-between;
+    }
+
+    .leg-option-section {
+        gap: 12px;
+    }
+
+    .leg-option-heading {
+        align-items: flex-start;
+        flex-direction: column;
+        padding: 0 24px;
+    }
+
+    .leg-option-heading h3 {
+        font-size: 19px;
+    }
+
+    .leg-step-actions {
+        padding: 0 24px 24px;
+    }
+
+    .trip-review {
+        margin: 0 24px;
+    }
+
+    .trip-review-heading {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .trip-review-legs article {
+        grid-template-columns: 1fr;
+    }
+
+    .trip-review-price {
+        grid-row: auto;
+        grid-column: auto;
+    }
+
     .itinerary-list {
         padding: 0 24px 24px;
     }
@@ -1596,7 +2472,6 @@ button {
         padding: 18px 0;
     }
 
-    .trip-leg > input,
     .trip-leg > .airline-logo,
     .trip-leg > .logo-fallback {
         display: none;
