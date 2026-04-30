@@ -565,56 +565,60 @@ function ApproachFooter() {
             <div className="shell approach-layout">
                 <div className="approach-intro">
                     <p className="eyebrow">Implementation notes</p>
-                    <h2>What to look for in this submission.</h2>
+                    <h2>From the assignment prompt to a route planner.</h2>
                     <p>
-                        This is built as a real trip-search flow, not a hardcoded sample-data screen. The reviewer can
-                        run the app, search through Postgres-backed flight templates, page through results, and inspect
-                        the same behavior through documented Laravel APIs. Postgres is the source of truth; the planner
-                        keeps search fast by moving route expansion into memory instead of querying inside the loop.
+                        The prompt starts with one-way and round-trip search on a small JSON shape. This implementation
+                        keeps that format, then builds the production path around Laravel APIs, Postgres flight
+                        templates, a React SPA, and a planner that can handle a much larger route network.
                     </p>
                 </div>
                 <div className="approach-notes" aria-label="Technical approach">
                     <section>
                         <span>01</span>
-                        <h3>Postgres, not a SQL loop</h3>
+                        <h3>Required workflow</h3>
                         <p>
-                            The database stores durable airports, airlines, and flight templates. At request time the
-                            backend loads a compact route graph and lazily fetches flights only for candidate route
-                            edges, avoiding repeated SQL joins during route expansion.
+                            The app provides PHP web services, a no-refresh React interface, one-way search, round-trip
+                            search, future-date validation, timezone-aware flight times, and local setup instructions.
                         </p>
                     </section>
                     <section>
                         <span>02</span>
-                        <h3>Recurring templates</h3>
+                        <h3>Extra coverage</h3>
                         <p>
-                            The prompt says every flight is available every day. Storing flight templates once, then
-                            combining them with the requested date and airport timezone, avoids creating duplicate rows
-                            for every future date.
+                            The submission also includes Postgres storage, API documentation, automated tests, sorting,
+                            pagination, nearby airports, preferred-airline ranking, open-jaw trips, and multi-city trips.
                         </p>
                     </section>
                     <section>
                         <span>03</span>
-                        <h3>No route precompute table</h3>
+                        <h3>Realistic dataset</h3>
                         <p>
-                            Precomputing full itineraries would explode across origin, destination, date, airline,
-                            stops, layover, and sort choices. This app precomputes route lookup structures, then builds
-                            the specific itineraries requested by the user.
+                            The sample JSON is still supported, but it is too small to prove a search strategy. I used
+                            OpenFlights airlines, airports, and routes, enriched airport metadata from OurAirports, and
+                            generated deterministic schedules and fares for the assignment format.
                         </p>
                     </section>
                     <section>
                         <span>04</span>
-                        <h3>The backend does the work</h3>
+                        <h3>Recurring templates</h3>
                         <p>
-                            React submits criteria. Laravel validates them. Postgres stores recurring flight templates.
-                            The planner handles route selection, UTC layover math, return chronology, sorting,
-                            pagination snapshots, and the extra trip types.
+                            Flights are stored once with airport-local times because the prompt says every flight is
+                            available every day. Search combines the template, requested date, and airport timezone.
                         </p>
                     </section>
                 </div>
                 <section className="flight-network-map" aria-labelledby="flight-network-map-title">
                     <div>
-                        <p className="eyebrow">Dataset map</p>
-                        <h3 id="flight-network-map-title">Generated flight network map.</h3>
+                        <p className="eyebrow">Dataset</p>
+                        <h3 id="flight-network-map-title">Why the data was expanded.</h3>
+                        <p>
+                            The real network shape comes from OpenFlights: airline codes, airport codes, coordinates,
+                            timezones, and directional route pairs. Country and region gaps are filled with OurAirports
+                            metadata. Since those sources do not include daily timetables or fares, the generator creates
+                            deterministic assignment data for each route: flight numbers, departure times, arrival
+                            times, and prices. The routes are realistic; the schedules and fares are synthetic but
+                            repeatable.
+                        </p>
                     </div>
                     <img
                         alt="Full generated flight dataset route map"
@@ -622,68 +626,6 @@ function ApproachFooter() {
                         src="/flight-network-map.svg"
                         width="1200"
                     />
-                </section>
-                <section className="testing-summary" aria-labelledby="testing-summary-title">
-                    <div>
-                        <p className="eyebrow">Automated testing</p>
-                        <h3 id="testing-summary-title">What the tests are meant to prove.</h3>
-                        <p>
-                            The tests are split by risk: planner correctness, API contracts, full-data performance, and
-                            browser behavior. They are there to catch the bugs that are easy to miss in a flight planner.
-                        </p>
-                    </div>
-                    <div className="testing-layers" aria-label="Automated test coverage">
-                        <article>
-                            <strong>71 PHPUnit tests</strong>
-                            <h4>Trip rules</h4>
-                            <p>
-                                Covers one-way, round-trip, open-jaw, multi-city, nearby airports, sorting, airline
-                                preference, stop limits, duration limits, invalid dates, return chronology, overnight
-                                flights, and DST elapsed time.
-                            </p>
-                        </article>
-                        <article>
-                            <strong>API feature tests</strong>
-                            <h4>Real request path</h4>
-                            <p>
-                                Exercises Laravel endpoints against database-backed flight templates, including bad
-                                input, unknown airports, return-date rejection, pagination sessions, expiry, and lazy
-                                loading by route.
-                            </p>
-                        </article>
-                        <article>
-                            <strong>Browser workflows</strong>
-                            <h4>Actual UI flows</h4>
-                            <p>
-                                Clicks through the rendered app: trip modes, airport autocomplete, calendars, nearby
-                                search, paging, selectable legs, and flight-detail expansion.
-                            </p>
-                        </article>
-                        <article>
-                            <strong>Seeded exploratory UI</strong>
-                            <h4>Messy interactions</h4>
-                            <p>
-                                Randomized browser tests pick airports and airlines from the API, try invalid values,
-                                recover, and fail on JavaScript errors, failed requests, or server errors.
-                            </p>
-                        </article>
-                        <article>
-                            <strong>Full-data checks</strong>
-                            <h4>Not just sample data</h4>
-                            <p>
-                                Full-data tests use the 164k-flight dataset to catch search strategies that look fine on
-                                two flights but fall apart on dense hubs and remote-to-remote routes.
-                            </p>
-                        </article>
-                        <article>
-                            <strong>Search sessions</strong>
-                            <h4>Stable pagination</h4>
-                            <p>
-                                Pagination tests verify that page 2 reuses the same search_id instead of running a new
-                                search and that expired result sessions produce a clear UI message.
-                            </p>
-                        </article>
-                    </div>
                 </section>
                 <section className="algorithm-evolution" aria-labelledby="algorithm-evolution-title">
                     <div>
@@ -747,6 +689,43 @@ function ApproachFooter() {
                         </article>
                     </div>
                 </section>
+                <section className="testing-summary" aria-labelledby="production-planner-title">
+                    <div>
+                        <p className="eyebrow">Production planner</p>
+                        <h3 id="production-planner-title">What runs on each search.</h3>
+                        <p>
+                            Postgres stores durable data. The planner builds compact lookup structures for the request,
+                            searches route patterns in memory, then materializes real dated flights only for the route
+                            edges that survive.
+                        </p>
+                    </div>
+                    <div className="testing-layers" aria-label="Production planner details">
+                        <article>
+                            <strong>Route graph</strong>
+                            <h4>Airport edges first</h4>
+                            <p>
+                                Multiple flight templates on the same airport pair collapse into one weighted edge for
+                                route search. This keeps the search focused on paths before schedules are expanded.
+                            </p>
+                        </article>
+                        <article>
+                            <strong>Lazy flight rows</strong>
+                            <h4>Fetch after the path survives</h4>
+                            <p>
+                                Full flight rows are loaded only for candidate route edges. That avoids pulling the
+                                whole flight table into a normal PHP request.
+                            </p>
+                        </article>
+                        <article>
+                            <strong>UTC validation</strong>
+                            <h4>Correct elapsed time</h4>
+                            <p>
+                                User-facing times stay local to each airport. Layovers, overnight flights, DST, and total
+                                duration are checked with UTC instants.
+                            </p>
+                        </article>
+                    </div>
+                </section>
                 <section className="testing-summary" aria-labelledby="planner-details-title">
                     <div>
                         <p className="eyebrow">Routing behavior</p>
@@ -773,16 +752,130 @@ function ApproachFooter() {
                             <strong>Pagination</strong>
                             <h4>Stored result order</h4>
                             <p>
-                                The first response stores the ordered result set. Later pages read from that stored
-                                order with search_id instead of running a new search.
+                                The planner runs once, stores the ranked results briefly, and serves later pages from
+                                that same ordered list. Multi-leg trips keep separate result lists per leg, so paging the
+                                return flight does not change the outbound options.
                             </p>
                         </article>
                         <article>
                             <strong>Timezones</strong>
-                            <h4>Local display, UTC math</h4>
+                            <h4>Visible local times</h4>
                             <p>
-                                Flight templates keep airport-local departure and arrival times. The planner converts
-                                them to UTC instants before checking layovers, elapsed duration, overnight flights, and DST.
+                                Results display local airport times for each segment so the itinerary reads like an
+                                actual flight schedule.
+                            </p>
+                        </article>
+                    </div>
+                </section>
+                <section className="testing-summary" aria-labelledby="ui-design-title">
+                    <div>
+                        <p className="eyebrow">UI design</p>
+                        <h3 id="ui-design-title">How the interface maps to the planner.</h3>
+                        <p>
+                            The frontend uses Vite, React, Tailwind CSS, and shadcn/ui. Vite keeps the local Laravel
+                            workflow fast, React handles the stateful trip-builder interactions, Tailwind keeps the
+                            FlightHub-inspired styling close to the markup, and shadcn/ui provides accessible primitives
+                            for buttons, popovers, badges, and the date picker.
+                        </p>
+                    </div>
+                    <div className="testing-layers" aria-label="UI design choices">
+                        <article>
+                            <strong>Vite + React</strong>
+                            <h4>Fast SPA workflow</h4>
+                            <p>
+                                The app needs autocomplete, calendars, result sorting, pagination, expandable details,
+                                and staged leg selection without full page reloads. React owns that UI state, while Vite
+                                gives fast local hot reload during development.
+                            </p>
+                        </article>
+                        <article>
+                            <strong>Tailwind CSS</strong>
+                            <h4>Custom travel styling</h4>
+                            <p>
+                                Tailwind keeps the layout and responsive rules in the app instead of adding a separate
+                                design system layer. That made it easier to match the FlightHub reference while still
+                                tuning the result cards for this planner.
+                            </p>
+                        </article>
+                        <article>
+                            <strong>shadcn/ui</strong>
+                            <h4>Accessible primitives</h4>
+                            <p>
+                                The app uses shadcn-style components where primitives matter: buttons, badges, popovers,
+                                and the calendar date picker. The visual layer is customized so those controls still fit
+                                the FlightHub-inspired interface.
+                            </p>
+                        </article>
+                        <article>
+                            <strong>Trip workflow</strong>
+                            <h4>Pick flights in stages</h4>
+                            <p>
+                                The UI is based on the FlightHub search pattern, but the result flow is adapted for
+                                one-way, round-trip, open-jaw, and multi-city searches. Each leg can be sorted, paged,
+                                and selected independently before the trip is reviewed.
+                            </p>
+                        </article>
+                    </div>
+                </section>
+                <section className="testing-summary" aria-labelledby="testing-summary-title">
+                    <div>
+                        <p className="eyebrow">Automated testing</p>
+                        <h3 id="testing-summary-title">How the behavior was verified.</h3>
+                        <p>
+                            The suite targets the failure modes that matter for this app: planner rules, API contracts,
+                            browser workflows, pagination sessions, and full-data routes.
+                        </p>
+                    </div>
+                    <div className="testing-layers" aria-label="Automated test coverage">
+                        <article>
+                            <strong>71 PHPUnit tests</strong>
+                            <h4>Planner edge cases</h4>
+                            <p>
+                                These tests catch the mistakes that usually break flight search: invalid connections,
+                                impossible dates, wrong return chronology, overnight arrivals, DST duration errors,
+                                bad sorting, and trip modes returning the wrong shape.
+                            </p>
+                        </article>
+                        <article>
+                            <strong>API feature tests</strong>
+                            <h4>Real request path</h4>
+                            <p>
+                                Exercises Laravel endpoints against database-backed flight templates, including bad
+                                input, unknown airports, return-date rejection, pagination sessions, expiry, and lazy
+                                loading by route.
+                            </p>
+                        </article>
+                        <article>
+                            <strong>Browser workflows</strong>
+                            <h4>Actual UI flows</h4>
+                            <p>
+                                Clicks through the rendered app: trip modes, airport autocomplete, calendars, nearby
+                                search, paging, selectable legs, and flight-detail expansion.
+                            </p>
+                        </article>
+                        <article>
+                            <strong>Seeded exploratory UI</strong>
+                            <h4>Messy interactions</h4>
+                            <p>
+                                Randomized browser tests pick airports and airlines from the API, try invalid values,
+                                recover, and fail on JavaScript errors, failed requests, or server errors.
+                            </p>
+                        </article>
+                        <article>
+                            <strong>Full-data checks</strong>
+                            <h4>Scale regression guard</h4>
+                            <p>
+                                These checks run against the generated network, including hard remote-to-remote routes,
+                                so changes that reintroduce broad scans, slow queries, or memory-heavy loading show up
+                                before review.
+                            </p>
+                        </article>
+                        <article>
+                            <strong>Search sessions</strong>
+                            <h4>Stable pagination</h4>
+                            <p>
+                                These tests make sure page navigation keeps the same ranked list, does not recompute the
+                                search on every click, and shows a clear recovery message when stored results expire.
                             </p>
                         </article>
                     </div>

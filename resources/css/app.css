@@ -2055,8 +2055,27 @@ button {
 }
 
 @media (max-width: 760px) {
+    html,
+    body,
+    .flight-app {
+        overflow-x: hidden;
+    }
+
     .flight-app {
         background: #f0f2f6;
+    }
+
+    .shell,
+    .results-section,
+    .results-layout,
+    .results-main,
+    .trip-builder-results,
+    .trip-builder-summary,
+    .leg-option-section,
+    .itinerary-list,
+    .itinerary-card {
+        min-width: 0;
+        max-width: 100%;
     }
 
     .site-header {
@@ -2332,7 +2351,7 @@ button {
     }
 
     .results-toolbar {
-        padding: 0 24px;
+        padding: 0;
     }
 
     .results-toolbar .eyebrow,
@@ -2346,7 +2365,7 @@ button {
     }
 
     .fare-tabs {
-        margin: 0 24px;
+        margin: 0;
         grid-template-columns: repeat(3, 1fr);
         border: 0;
         border-radius: 0;
@@ -2390,14 +2409,15 @@ button {
             "stats"
             "stepper";
         grid-template-columns: 1fr;
-        margin: 0 24px;
+        margin: 0;
+        padding: 16px;
     }
 
     .trip-stepper {
         overflow-x: auto;
         grid-template-columns: none;
         grid-auto-flow: column;
-        grid-auto-columns: minmax(148px, 180px);
+        grid-auto-columns: minmax(132px, calc((100% - 8px) / 2));
         padding-bottom: 2px;
     }
 
@@ -2406,7 +2426,16 @@ button {
     }
 
     .trip-builder-summary dl {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 8px;
         justify-content: space-between;
+    }
+
+    .trip-builder-summary dt,
+    .trip-builder-summary dd {
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
     .leg-option-section {
@@ -2416,19 +2445,24 @@ button {
     .leg-option-heading {
         align-items: flex-start;
         flex-direction: column;
-        padding: 0 24px;
+        padding: 0;
     }
 
     .leg-option-heading h3 {
         font-size: 19px;
     }
 
+    .leg-sort-tabs {
+        width: 100%;
+        min-width: 0;
+    }
+
     .leg-step-actions {
-        padding: 0 24px 24px;
+        padding: 0 0 24px;
     }
 
     .trip-review {
-        margin: 0 24px;
+        margin: 0;
     }
 
     .trip-review-heading {
@@ -2446,7 +2480,7 @@ button {
     }
 
     .itinerary-list {
-        padding: 0 24px 24px;
+        padding: 0 0 24px;
     }
 
     .itinerary-card {
@@ -2461,7 +2495,7 @@ button {
     }
 
     .segment-stack {
-        padding: 14px 24px 0;
+        padding: 14px 16px 0;
     }
 
     .trip-leg {
@@ -2489,13 +2523,22 @@ button {
 
     .time-route {
         display: grid;
-        grid-template-columns: 1fr 1.25fr 1fr;
-        gap: 10px;
+        grid-template-columns: minmax(0, 1fr) minmax(72px, 0.8fr) minmax(0, 1fr);
+        gap: 8px;
         align-items: center;
+        min-width: 0;
     }
 
     .time-route strong {
-        font-size: 21px;
+        overflow: hidden;
+        min-width: 0;
+        font-size: 19px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .time-route > * {
+        min-width: 0;
     }
 
     .time-route strong:last-child {
@@ -2518,7 +2561,7 @@ button {
     }
 
     .price-panel {
-        padding: 20px 24px 24px;
+        padding: 20px 16px 24px;
     }
 
     .airline-lockup {
@@ -2542,11 +2585,23 @@ button {
     }
 
     .card-footer {
-        padding: 14px 24px;
+        padding: 14px 16px;
     }
 
     .flight-details {
-        padding: 0 24px 20px;
+        padding: 0 16px 20px;
+    }
+
+    .pagination-controls {
+        flex-wrap: wrap;
+        gap: 8px;
+        padding: 12px;
+    }
+
+    .pagination-controls span {
+        min-width: 0;
+        width: 100%;
+        order: -1;
     }
 
     .detail-row {
