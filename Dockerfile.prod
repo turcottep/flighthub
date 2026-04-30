@@ -1,0 +1,55 @@
+FROM composer:2 AS vendor
+
+WORKDIR /app
+
+COPY composer.json composer.lock ./
+RUN composer install --no-dev --prefer-dist --no-interaction --no-progress --no-scripts --optimize-autoloader
+
+COPY . .
+RUN composer dump-autoload --optimize
+
+FROM node:20-alpine AS frontend
+
+WORKDIR /app
+
+COPY package.json package-lock.json ./
+RUN npm ci
+
+COPY . .
+ENV VITE_FLIGHT_DATA_SOURCE=backend
+RUN npm run build
+
+FROM php:8.4-fpm-bookworm
+
+WORKDIR /var/www/html
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        gettext-base \
+        libicu-dev \
+        libpq-dev \
+        libzip-dev \
+        nginx \
+        unzip \
+    && docker-php-ext-install \
+        intl \
+        opcache \
+        pdo_pgsql \
+        zip \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+COPY . .
+COPY --from=vendor /app/vendor ./vendor
+COPY --from=frontend /app/public/build ./public/build
+COPY docker/nginx/prod.conf.template /etc/nginx/templates/default.conf.template
+COPY docker/app/start-prod.sh /usr/local/bin/start-prod
+
+RUN chmod +x /usr/local/bin/start-prod \
+    && mkdir -p storage/logs bootstrap/cache \
+    && chown -R www-data:www-data storage bootstrap/cache
+
+EXPOSE 8080
+
+CMD ["start-prod"]

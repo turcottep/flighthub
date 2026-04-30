@@ -89,5 +89,6 @@ Redis host port: `16379`
 - Architecture: `docs/architecture.md`
 - API: `docs/api.md`
 - Data model and imports: `docs/data-model.md`
+- Deployment: `docs/deployment.md`
 - Sample data: `sample_data.json`
 - Expanded raw data: `data/raw/`

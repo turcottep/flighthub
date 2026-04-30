@@ -1,12 +1,12 @@
 <?php
 
 use App\Http\Controllers\FlightReferenceController;
+use App\Http\Controllers\HealthController;
 use App\Http\Controllers\TripSearchController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::view('/', 'welcome');
+Route::get('/health', HealthController::class);
 
 Route::prefix('api')->group(function (): void {
     Route::get('/airlines', [FlightReferenceController::class, 'airlines']);

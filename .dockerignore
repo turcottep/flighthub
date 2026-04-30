@@ -5,5 +5,7 @@ vendor
 storage/logs/*
 public/build
 public/hot
+bootstrap/cache/*.php
 .env
+.env.*
 .DS_Store
