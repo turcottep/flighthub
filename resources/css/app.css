@@ -215,7 +215,8 @@ button {
 
 .compact-fields select,
 .field input,
-.field select {
+.field select,
+.date-trigger {
     min-height: 46px;
     width: 100%;
     border: 1px solid var(--line);
@@ -235,7 +236,8 @@ button {
 
 .field input:focus,
 .field select:focus,
-.compact-fields select:focus {
+.compact-fields select:focus,
+.date-trigger:focus-visible {
     border-color: var(--blue);
     box-shadow: 0 0 0 4px rgba(21, 112, 239, 0.12);
 }
@@ -907,40 +909,73 @@ button {
     position: relative;
 }
 
-.airport-input {
-    min-height: 46px;
-    width: 100%;
-    border: 1px solid var(--line);
-    border-radius: 8px;
-    background: #fff;
-    color: var(--ink);
-    font-size: 16px;
-    font-weight: 650;
-    outline: 0;
-    padding: 0 42px 0 54px;
-    text-overflow: ellipsis;
+.airport-field:focus-within {
+    z-index: 80;
 }
 
-.airport-input:focus {
+.airport-control {
+    display: grid;
+    min-height: 58px;
+    width: 100%;
+    grid-template-columns: 34px minmax(0, 1fr) 28px;
+    align-items: center;
+    gap: 14px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: #fff;
+    color: var(--ink);
+    padding: 8px 12px 8px 18px;
+}
+
+.airport-control:focus-within {
     border-color: var(--blue);
     box-shadow: 0 0 0 4px rgba(21, 112, 239, 0.12);
 }
 
-.field-icon {
-    position: absolute;
-    bottom: 12px;
-    left: 18px;
+.airport-control-icon {
+    justify-self: center;
     color: #344054;
-    pointer-events: none;
+}
+
+.airport-input-stack {
+    display: grid;
+    min-width: 0;
+    gap: 2px;
+    text-transform: none;
+}
+
+.airport-input-stack label {
+    color: #667085;
+    font-size: 12px;
+    font-weight: 800;
+    line-height: 1;
+    text-transform: none;
+}
+
+.airport-control .airport-input {
+    min-height: 25px;
+    width: 100%;
+    background: #fff;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    color: var(--ink);
+    font-size: 16px;
+    font-weight: 760;
+    line-height: 1.15;
+    outline: 0;
+    padding: 0;
+    text-overflow: ellipsis;
+}
+
+.airport-control .airport-input:focus {
+    box-shadow: none;
 }
 
 .field-clear {
-    position: absolute;
-    right: 12px;
-    bottom: 13px;
     display: grid;
-    width: 22px;
-    height: 22px;
+    width: 28px;
+    height: 28px;
     place-items: center;
     border: 0;
     background: transparent;
@@ -1008,6 +1043,117 @@ button {
     padding: 16px;
     text-align: center;
     text-transform: none;
+}
+
+.date-picker-field {
+    min-width: 0;
+}
+
+.date-trigger {
+    justify-content: flex-start;
+    gap: 10px;
+    background: #fff;
+    color: var(--ink);
+    text-align: left;
+}
+
+.date-trigger:hover {
+    background: #fff;
+}
+
+.date-trigger:disabled {
+    cursor: not-allowed;
+    background: #f8fafc;
+    opacity: 1;
+}
+
+.date-trigger svg {
+    color: #344054;
+    flex: 0 0 auto;
+}
+
+.date-trigger span {
+    overflow: hidden;
+    min-width: 0;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.date-popover {
+    z-index: 80;
+    width: auto;
+    border: 1px solid var(--soft-line);
+    border-radius: 12px;
+    background: #fff;
+    box-shadow: 0 18px 42px rgba(16, 24, 40, 0.18);
+    color: var(--ink);
+    padding: 10px;
+}
+
+.calendar {
+    --rdp-accent-color: var(--blue);
+    --rdp-background-color: #f4f8ff;
+    --rdp-day-height: 38px;
+    --rdp-day-width: 38px;
+    --rdp-day_button-height: 34px;
+    --rdp-day_button-width: 34px;
+    --rdp-day_button-border-radius: 8px;
+    margin: 0;
+    color: var(--ink);
+    font-size: 14px;
+}
+
+.calendar .rdp-month_caption {
+    color: var(--ink);
+    font-size: 15px;
+    font-weight: 850;
+}
+
+.calendar .rdp-nav button {
+    border-radius: 8px;
+    color: #475467;
+}
+
+.calendar .rdp-nav button:hover {
+    background: #f2f4f7;
+}
+
+.calendar .rdp-weekday {
+    color: #667085;
+    font-size: 12px;
+    font-weight: 850;
+    text-transform: uppercase;
+}
+
+.calendar .rdp-day_button {
+    border: 0;
+    font-weight: 700;
+}
+
+.calendar .rdp-day_button:hover {
+    background: #f4f8ff;
+}
+
+.calendar .rdp-selected .rdp-day_button {
+    background: var(--blue);
+    color: #fff;
+}
+
+.calendar .rdp-today:not(.rdp-outside) {
+    color: var(--blue);
+}
+
+.calendar .rdp-selected.rdp-today .rdp-day_button {
+    color: #fff;
+}
+
+.calendar .rdp-outside {
+    color: #98a2b3;
+}
+
+.calendar .rdp-disabled {
+    color: #98a2b3;
+    opacity: 0.45;
 }
 
 .results-section {
@@ -1276,10 +1422,16 @@ button {
     .compact-fields select,
     .field input,
     .field select,
-    .airport-input {
+    .airport-control,
+    .date-trigger {
         min-height: 58px;
         border-radius: 12px;
         font-size: 17px;
+    }
+
+    .airport-control .airport-input {
+        min-height: 27px;
+        font-size: 18px;
     }
 
     .search-grid {
@@ -1288,51 +1440,46 @@ button {
         padding: 0 0 22px;
     }
 
-    .airport-field {
-        z-index: 5;
+    .airport-control {
+        min-height: 74px;
+        grid-template-columns: 38px minmax(0, 1fr) 32px;
+        gap: 12px;
+        padding: 10px 14px 10px 18px;
     }
 
-    .field-icon {
-        bottom: 17px;
-    }
-
-    .field-clear {
-        bottom: 18px;
+    .airport-input-stack label {
+        font-size: 13px;
     }
 
     .airport-dropdown {
-        position: fixed;
-        inset: 0;
-        z-index: 100;
-        display: flex;
-        overflow: auto;
-        flex-direction: column;
-        border: 0;
-        border-radius: 0;
-        box-shadow: none;
-        padding: 84px 18px 24px;
-    }
-
-    .airport-dropdown::before {
-        position: fixed;
-        top: 0;
         right: 0;
         left: 0;
-        height: 66px;
-        background: #112d55;
-        color: #fff;
-        content: 'Select airport';
-        font-size: 18px;
-        font-weight: 800;
-        line-height: 66px;
-        padding-left: 18px;
+        max-height: min(66vh, 560px);
+        overflow: auto;
+        border: 1px solid var(--soft-line);
+        border-radius: 16px;
+        box-shadow: 0 18px 42px rgba(16, 24, 40, 0.18);
+        padding: 0;
     }
 
     .airport-dropdown button {
-        border: 1px solid var(--soft-line);
-        border-radius: 12px;
-        margin-bottom: 10px;
-        padding: 16px;
+        border: 0;
+        border-bottom: 1px solid var(--soft-line);
+        border-radius: 0;
+        margin-bottom: 0;
+        padding: 16px 18px;
+    }
+
+    .date-popover {
+        width: min(calc(100vw - 36px), 360px);
+    }
+
+    .calendar {
+        --rdp-day-height: 42px;
+        --rdp-day-width: 42px;
+        --rdp-day_button-height: 38px;
+        --rdp-day_button-width: 38px;
+        width: 100%;
     }
 
     .search-button {

@@ -2,16 +2,19 @@ services:
   app:
     build:
       context: .
-    command: sh -c "composer install && php-fpm"
-    env_file:
-      - .env
+    command: php-fpm
+    environment:
+      COMPOSER_CACHE_DIR: /tmp/cache
     volumes:
       - .:/var/www/html
+      - ./.env.docker:/var/www/html/.env
       - vendor:/var/www/html/vendor
       - composer-cache:/tmp/cache
     depends_on:
-      - db
-      - redis
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
 
   web:
     image: nginx:1.27-alpine
@@ -31,6 +34,7 @@ services:
       - "5173:5173"
     volumes:
       - .:/var/www/html
+      - ./.env.docker:/var/www/html/.env
       - node_modules:/var/www/html/node_modules
     depends_on:
       - app
@@ -38,7 +42,7 @@ services:
   db:
     image: postgres:16-alpine
     ports:
-      - "5432:5432"
+      - "15432:5432"
     environment:
       POSTGRES_DB: flighthub
       POSTGRES_USER: flighthub
@@ -54,7 +58,7 @@ services:
   redis:
     image: redis:7-alpine
     ports:
-      - "6379:6379"
+      - "16379:6379"
 
 volumes:
   composer-cache:

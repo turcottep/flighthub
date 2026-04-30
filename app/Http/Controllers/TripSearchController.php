@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Services\FlightDataRepository;
 use App\Services\TripPlanner;
+use App\Services\TripPlannerV3;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
@@ -21,21 +22,18 @@ class TripSearchController extends Controller
             'airline' => ['nullable', 'string', 'size:2'],
             'sort' => ['nullable', 'string', 'in:best,price,departure,arrival,duration'],
             'max_stops' => ['nullable', 'integer', 'min:0', 'max:4'],
+            'max_segments' => ['nullable', 'integer', 'min:1', 'max:8'],
             'max_results' => ['nullable', 'integer', 'min:1', 'max:100'],
             'minimum_layover_minutes' => ['nullable', 'integer', 'min:0', 'max:480'],
             'max_duration_hours' => ['nullable', 'integer', 'min:1', 'max:168'],
+            'max_connections_scanned' => ['nullable', 'integer', 'min:1', 'max:1000000'],
         ]);
 
         $origin = strtoupper($validated['origin']);
         $destination = strtoupper($validated['destination']);
-        $originCodes = $this->locationAirportCodes($origin, 'origin');
+        $this->locationAirportCodes($origin, 'origin');
         $this->locationAirportCodes($destination, 'destination');
-        $planner = new TripPlanner($this->flightData->loadFromDatabaseForDepartures(
-            $this->flightData->departureAirportCodesReachableFromDatabase(
-                $originCodes,
-                (int) ($validated['max_stops'] ?? 0),
-            ),
-        ));
+        $planner = new TripPlannerV3($this->flightData->loadFromDatabase());
 
         return response()->json([
             'data' => $planner->searchOneWay(
@@ -218,13 +216,11 @@ class TripSearchController extends Controller
     {
         $options = [];
 
-        foreach (['sort', 'max_stops', 'max_results', 'minimum_layover_minutes', 'max_duration_hours', 'radius_km'] as $key) {
+        foreach (['sort', 'max_stops', 'max_segments', 'max_results', 'minimum_layover_minutes', 'max_duration_hours', 'radius_km', 'max_connections_scanned'] as $key) {
             if (array_key_exists($key, $validated)) {
                 $options[$key] = $validated[$key];
             }
         }
-
-        $options['max_stops'] ??= 0;
 
         if (! empty($validated['airline'])) {
             $options['airline'] = strtoupper((string) $validated['airline']);

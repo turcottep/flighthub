@@ -69,16 +69,19 @@ DB_CONNECTION=sqlite
 
 ## Docker Development
 
-The repo also includes a more production-like Docker Compose setup with Nginx, PHP-FPM, Postgres, Redis, and Vite. Use this when network conditions are good enough to pull base images.
+The repo also includes a production-shaped Docker Compose setup with Nginx, PHP-FPM, Postgres, Redis, and Vite. It uses the same service boundaries as a deployable stack, while keeping bind mounts and Vite hot reload for local iteration. Docker uses `.env.docker` instead of the host `.env`, so local tokens and machine-specific settings do not leak into container config.
 
 ```bash
-cp .env.docker.example .env
+cp .env.docker.example .env.docker
 docker compose up -d --build
 docker compose exec app php artisan key:generate
 docker compose exec app php artisan migrate
+docker compose exec app php artisan trip-data:import data/generated/trip_data_ac_ca.json --fresh
 ```
 
 Docker app URL: `http://localhost:8080`
+Postgres host port: `15432`
+Redis host port: `16379`
 
 ## Assignment References
 

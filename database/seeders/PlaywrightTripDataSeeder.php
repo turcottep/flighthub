@@ -1,0 +1,121 @@
+<?php
+
+namespace Database\Seeders;
+
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
+
+class PlaywrightTripDataSeeder extends Seeder
+{
+    public function run(): void
+    {
+        DB::table('airlines')->insert([
+            ['code' => 'AC', 'name' => 'Air Canada'],
+            ['code' => 'WS', 'name' => 'WestJet'],
+        ]);
+
+        DB::table('airports')->insert([
+            [
+                'code' => 'YUL',
+                'city_code' => 'YMQ',
+                'name' => 'Pierre Elliott Trudeau International',
+                'city' => 'Montreal',
+                'country_code' => 'CA',
+                'region_code' => 'QC',
+                'latitude' => 45.457714,
+                'longitude' => -73.749908,
+                'timezone' => 'America/Montreal',
+            ],
+            [
+                'code' => 'YVR',
+                'city_code' => 'YVR',
+                'name' => 'Vancouver International',
+                'city' => 'Vancouver',
+                'country_code' => 'CA',
+                'region_code' => 'BC',
+                'latitude' => 49.194698,
+                'longitude' => -123.179192,
+                'timezone' => 'America/Vancouver',
+            ],
+            [
+                'code' => 'YYZ',
+                'city_code' => 'YTO',
+                'name' => 'Toronto Pearson International',
+                'city' => 'Toronto',
+                'country_code' => 'CA',
+                'region_code' => 'ON',
+                'latitude' => 43.6772,
+                'longitude' => -79.6306,
+                'timezone' => 'America/Toronto',
+            ],
+            [
+                'code' => 'LAX',
+                'city_code' => 'LAX',
+                'name' => 'Los Angeles International',
+                'city' => 'Los Angeles',
+                'country_code' => 'US',
+                'region_code' => 'CA',
+                'latitude' => 33.9416,
+                'longitude' => -118.4085,
+                'timezone' => 'America/Los_Angeles',
+            ],
+        ]);
+
+        DB::table('flights')->insert([
+            [
+                'airline_code' => 'AC',
+                'number' => '301',
+                'departure_airport_code' => 'YUL',
+                'departure_time' => '07:35',
+                'arrival_airport_code' => 'YVR',
+                'arrival_time' => '10:05',
+                'price' => '273.23',
+            ],
+            [
+                'airline_code' => 'AC',
+                'number' => '305',
+                'departure_airport_code' => 'YUL',
+                'departure_time' => '12:00',
+                'arrival_airport_code' => 'YVR',
+                'arrival_time' => '13:30',
+                'price' => '325.50',
+            ],
+            [
+                'airline_code' => 'WS',
+                'number' => '701',
+                'departure_airport_code' => 'YUL',
+                'departure_time' => '09:15',
+                'arrival_airport_code' => 'YVR',
+                'arrival_time' => '12:30',
+                'price' => '199.99',
+            ],
+            [
+                'airline_code' => 'AC',
+                'number' => '302',
+                'departure_airport_code' => 'YVR',
+                'departure_time' => '11:30',
+                'arrival_airport_code' => 'YUL',
+                'arrival_time' => '19:11',
+                'price' => '220.63',
+            ],
+            [
+                'airline_code' => 'AC',
+                'number' => '100',
+                'departure_airport_code' => 'YUL',
+                'departure_time' => '08:00',
+                'arrival_airport_code' => 'YYZ',
+                'arrival_time' => '09:15',
+                'price' => '85.00',
+            ],
+            [
+                'airline_code' => 'AC',
+                'number' => '200',
+                'departure_airport_code' => 'YYZ',
+                'departure_time' => '10:30',
+                'arrival_airport_code' => 'YVR',
+                'arrival_time' => '12:15',
+                'price' => '90.00',
+            ],
+        ]);
+    }
+}

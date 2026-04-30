@@ -2,6 +2,7 @@
 .DS_Store
 .env
 .env.backup
+.env.docker
 .env.production
 .phpactor.json
 .phpunit.result.cache
@@ -15,12 +16,15 @@
 /auth.json
 /example
 /node_modules
+/playwright-report
 /public/build
 /public/hot
 /public/storage
 /storage/*.key
 /storage/pail
+/test-results
 /vendor
+database/playwright.sqlite
 _ide_helper.php
 Homestead.json
 Homestead.yaml

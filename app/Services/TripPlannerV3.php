@@ -29,6 +29,8 @@ class TripPlannerV3
 
     private const LABELS_PER_AIRPORT_LIMIT = 24;
 
+    private const DEFAULT_MAX_OUTGOING_CONNECTIONS_PER_LABEL = 96;
+
     /** @var array<string, array<string, mixed>> */
     private array $airportsByCode = [];
 
@@ -81,12 +83,42 @@ class TripPlannerV3
     /**
      * @return list<array<string, mixed>>
      */
+    public function searchOneWayNear(
+        float $originLatitude,
+        float $originLongitude,
+        float $destinationLatitude,
+        float $destinationLongitude,
+        string $departureDate,
+        array $options = [],
+    ): array {
+        $this->assertDate($departureDate);
+        $this->assertCoordinates($originLatitude, $originLongitude, 'origin');
+        $this->assertCoordinates($destinationLatitude, $destinationLongitude, 'destination');
+        $this->assertNonNegativeFloatOption($options, 'radius_km');
+
+        $radiusKm = (float) ($options['radius_km'] ?? 50);
+        $options = $this->normalizeOptions($options);
+        $originCodes = $this->nearbyAirportCodes($originLatitude, $originLongitude, $radiusKm);
+        $destinationCodes = $this->nearbyAirportCodes($destinationLatitude, $destinationLongitude, $radiusKm);
+
+        if ($originCodes === [] || $destinationCodes === []) {
+            return [];
+        }
+
+        return $this->searchOneWayBetweenAirportSets($originCodes, $destinationCodes, $departureDate, $options);
+    }
+
+    /**
+     * @return list<array<string, mixed>>
+     */
     private function searchOneWayBetweenAirportSets(array $originCodes, array $destinationCodes, string $departureDate, array $options): array
     {
         $destinationCodeSet = array_fill_keys($destinationCodes, true);
         $remainingScoreLowerBounds = $this->remainingScoreLowerBounds($destinationCodes);
         $latestAllowedDepartureUtc = $this->nowUtc->add(new DateInterval('P365D'));
         $labelsByAirport = [];
+        $connectionQueue = new SplPriorityQueue;
+        $connectionQueue->setExtractFlags(SplPriorityQueue::EXTR_DATA);
         $scanWindowStartUtc = null;
         $scanWindowEndUtc = null;
 
@@ -109,7 +141,11 @@ class TripPlannerV3
                 ? $candidateWindowEndUtc
                 : $scanWindowEndUtc;
 
-            $labelsByAirport[$originCode][] = [
+            $originLabel = [
+                'arrival_ts' => $availableAfterUtc->getTimestamp(),
+                'price_cents' => 0,
+                'segment_count' => 0,
+                'score' => 0,
                 'airport' => $originCode,
                 'available_after_utc' => $availableAfterUtc,
                 'segments' => [],
@@ -120,6 +156,9 @@ class TripPlannerV3
                 'departure_window_start_utc' => $departureWindowStartUtc,
                 'departure_window_end_utc' => $departureWindowEndUtc,
             ];
+
+            $labelsByAirport[$originCode][] = $originLabel;
+            $this->enqueueCatchableConnections($connectionQueue, $originLabel, $remainingScoreLowerBounds, $options);
         }
 
         if ($scanWindowStartUtc === null || $scanWindowEndUtc === null) {
@@ -128,92 +167,62 @@ class TripPlannerV3
 
         $results = [];
         $connectionsScanned = 0;
-        $reachableAirportSet = array_fill_keys(array_keys($remainingScoreLowerBounds), true);
+        while (! $connectionQueue->isEmpty() && $connectionsScanned < $options['max_connections_scanned']) {
+            /** @var array{label: array<string, mixed>, connection: array<string, mixed>} $queued */
+            $queued = $connectionQueue->extract();
+            $label = $queued['label'];
+            $connection = $queued['connection'];
 
-        while ($connectionsScanned < $options['max_connections_scanned']) {
-            $connection = $this->nextScannableConnection($labelsByAirport, $reachableAirportSet, $options);
-
-            if ($connection === null || $connection['departure_utc'] > $scanWindowEndUtc) {
+            if ($connection['departure_utc'] > $scanWindowEndUtc) {
                 break;
             }
 
             $connectionsScanned++;
 
-            $departureLabels = $labelsByAirport[$connection['departure_airport']] ?? [];
-            if ($departureLabels === []) {
+            if (! $this->canUseConnection($label, $connection, $latestAllowedDepartureUtc, $destinationCodeSet, $options)) {
                 continue;
             }
 
-            foreach ($departureLabels as $label) {
-                if (count($label['segments']) >= $options['max_segments']) {
-                    continue;
-                }
+            $firstDepartureUtc = $label['first_departure_utc'] ?? $connection['departure_utc'];
+            $segment = $this->formatSegment($connection['flight'], $connection);
+            $segments = [...$label['segments'], $segment];
+            $totalPriceCents = $label['total_price_cents'] + $this->priceToCents($connection['flight']['price']);
+            $scoreSoFar = $this->bestScoreForItinerary($segments, $totalPriceCents);
+            $segmentCount = count($segments);
+            $arrivalAirport = $connection['arrival_airport'];
 
-                if ($connection['departure_utc'] < $label['available_after_utc']) {
-                    continue;
-                }
+            if ($this->isDominated($labelsByAirport[$arrivalAirport] ?? [], $connection['arrival_utc'], $totalPriceCents, $segmentCount, $scoreSoFar)) {
+                continue;
+            }
 
-                if (count($label['segments']) === 0) {
-                    if ($connection['departure_utc'] < $label['departure_window_start_utc'] || $connection['departure_utc'] >= $label['departure_window_end_utc']) {
-                        continue;
-                    }
+            $visitedAirports = $label['visited_airports'];
+            $visitedAirports[$arrivalAirport] = true;
 
-                    if ($connection['departure_utc'] < $this->nowUtc || $connection['departure_utc'] > $latestAllowedDepartureUtc) {
-                        continue;
-                    }
-                } elseif ($connection['departure_utc'] < $this->addMinutes($label['available_after_utc'], $options['minimum_layover_minutes'])) {
-                    continue;
-                }
+            $newLabel = [
+                'airport' => $arrivalAirport,
+                'available_after_utc' => $connection['arrival_utc'],
+                'segments' => $segments,
+                'total_price_cents' => $totalPriceCents,
+                'score_so_far' => $scoreSoFar,
+                'visited_airports' => $visitedAirports,
+                'first_departure_utc' => $firstDepartureUtc,
+                'departure_window_start_utc' => $label['departure_window_start_utc'],
+                'departure_window_end_utc' => $label['departure_window_end_utc'],
+            ];
 
-                if (isset($label['visited_airports'][$connection['arrival_airport']]) && ! isset($destinationCodeSet[$connection['arrival_airport']])) {
-                    continue;
-                }
+            $labelsByAirport[$arrivalAirport] = $this->addLabel(
+                $labelsByAirport[$arrivalAirport] ?? [],
+                $connection['arrival_utc'],
+                $totalPriceCents,
+                $segmentCount,
+                $scoreSoFar,
+                $newLabel,
+            );
 
-                $firstDepartureUtc = $label['first_departure_utc'] ?? $connection['departure_utc'];
-                $durationMinutes = $this->minutesBetween($firstDepartureUtc, $connection['arrival_utc']);
-
-                if ($durationMinutes > $options['max_duration_hours'] * 60) {
-                    continue;
-                }
-
-                $segment = $this->formatSegment($connection['flight'], $connection);
-                $segments = [...$label['segments'], $segment];
-                $totalPriceCents = $label['total_price_cents'] + $this->priceToCents($connection['flight']['price']);
-                $scoreSoFar = $this->bestScoreForItinerary($segments, $totalPriceCents);
-                $segmentCount = count($segments);
-                $arrivalAirport = $connection['arrival_airport'];
-
-                if ($this->isDominated($labelsByAirport[$arrivalAirport] ?? [], $connection['arrival_utc'], $totalPriceCents, $segmentCount, $scoreSoFar)) {
-                    continue;
-                }
-
-                $visitedAirports = $label['visited_airports'];
-                $visitedAirports[$arrivalAirport] = true;
-
-                $newLabel = [
-                    'airport' => $arrivalAirport,
-                    'available_after_utc' => $connection['arrival_utc'],
-                    'segments' => $segments,
-                    'total_price_cents' => $totalPriceCents,
-                    'score_so_far' => $scoreSoFar,
-                    'visited_airports' => $visitedAirports,
-                    'first_departure_utc' => $firstDepartureUtc,
-                    'departure_window_start_utc' => $label['departure_window_start_utc'],
-                    'departure_window_end_utc' => $label['departure_window_end_utc'],
-                ];
-
-                $labelsByAirport[$arrivalAirport] = $this->addLabel(
-                    $labelsByAirport[$arrivalAirport] ?? [],
-                    $connection['arrival_utc'],
-                    $totalPriceCents,
-                    $segmentCount,
-                    $scoreSoFar,
-                    $newLabel,
-                );
-
-                if (isset($destinationCodeSet[$arrivalAirport])) {
-                    $results[] = $this->formatItinerary($segments, $totalPriceCents);
-                }
+            if (isset($destinationCodeSet[$arrivalAirport])) {
+                $results[] = $this->formatItinerary($segments, $totalPriceCents);
+            } else {
+                $this->enqueueCatchableConnections($connectionQueue, $newLabel, $remainingScoreLowerBounds, $options);
             }
         }
 
@@ -275,6 +284,88 @@ class TripPlannerV3
         }
 
         return $bestConnection;
+    }
+
+    private function enqueueCatchableConnections(SplPriorityQueue $queue, array $label, array $remainingScoreLowerBounds, array $options): void
+    {
+        if (count($label['segments']) >= $options['max_segments']) {
+            return;
+        }
+
+        $earliestCatchUtc = count($label['segments']) === 0
+            ? $label['available_after_utc']
+            : $this->addMinutes($label['available_after_utc'], $options['minimum_layover_minutes']);
+
+        $candidateFlights = [];
+
+        foreach ($this->flightsByDepartureAirport[$label['airport']] ?? [] as $flight) {
+            if ($options['airline'] !== null && $flight['airline'] !== $options['airline']) {
+                continue;
+            }
+
+            if (! isset($remainingScoreLowerBounds[$flight['arrival_airport']])) {
+                continue;
+            }
+
+            $candidateFlights[] = [
+                'flight' => $flight,
+                'estimated_total' => $this->typicalFlightWeight($flight) + $remainingScoreLowerBounds[$flight['arrival_airport']],
+            ];
+        }
+
+        usort(
+            $candidateFlights,
+            fn (array $left, array $right): int => $left['estimated_total'] <=> $right['estimated_total'],
+        );
+
+        foreach (array_slice($candidateFlights, 0, $options['max_outgoing_connections_per_label']) as $candidate) {
+            $flight = $candidate['flight'];
+            $occurrence = $this->nextFlightOccurrence($flight, $earliestCatchUtc);
+            $connection = [
+                ...$occurrence,
+                'flight' => $flight,
+                'departure_airport' => $flight['departure_airport'],
+                'arrival_airport' => $flight['arrival_airport'],
+            ];
+
+            $priority = -$connection['departure_utc']->getTimestamp();
+            $queue->insert([
+                'label' => $label,
+                'connection' => $connection,
+            ], $priority);
+        }
+    }
+
+    private function canUseConnection(array $label, array $connection, DateTimeImmutable $latestAllowedDepartureUtc, array $destinationCodeSet, array $options): bool
+    {
+        if (count($label['segments']) >= $options['max_segments']) {
+            return false;
+        }
+
+        if ($connection['departure_utc'] < $label['available_after_utc']) {
+            return false;
+        }
+
+        if (count($label['segments']) === 0) {
+            if ($connection['departure_utc'] < $label['departure_window_start_utc'] || $connection['departure_utc'] >= $label['departure_window_end_utc']) {
+                return false;
+            }
+
+            if ($connection['departure_utc'] < $this->nowUtc || $connection['departure_utc'] > $latestAllowedDepartureUtc) {
+                return false;
+            }
+        } elseif ($connection['departure_utc'] < $this->addMinutes($label['available_after_utc'], $options['minimum_layover_minutes'])) {
+            return false;
+        }
+
+        if (isset($label['visited_airports'][$connection['arrival_airport']]) && ! isset($destinationCodeSet[$connection['arrival_airport']])) {
+            return false;
+        }
+
+        $firstDepartureUtc = $label['first_departure_utc'] ?? $connection['departure_utc'];
+        $durationMinutes = $this->minutesBetween($firstDepartureUtc, $connection['arrival_utc']);
+
+        return $durationMinutes <= $options['max_duration_hours'] * 60;
     }
 
     private function nextScanAfterUtc(array $labels, int $flightIndex): ?DateTimeImmutable
@@ -355,14 +446,18 @@ class TripPlannerV3
     {
         $from = $flight['departure_airport'];
         $to = $flight['arrival_airport'];
-        $weight = $this->priceToCents($flight['price'])
-            + ($this->typicalFlightDurationMinutes($flight) * self::BEST_DURATION_MINUTE_WEIGHT_CENTS)
-            + self::BEST_CONNECTION_PENALTY_CENTS;
 
         $this->reverseWeightedEdges[$to][] = [
             'from' => $from,
-            'weight' => $weight,
+            'weight' => $this->typicalFlightWeight($flight),
         ];
+    }
+
+    private function typicalFlightWeight(array $flight): int
+    {
+        return $this->priceToCents($flight['price'])
+            + ($this->typicalFlightDurationMinutes($flight) * self::BEST_DURATION_MINUTE_WEIGHT_CENTS)
+            + self::BEST_CONNECTION_PENALTY_CENTS;
     }
 
     private function typicalFlightDurationMinutes(array $flight): int
@@ -554,8 +649,9 @@ class TripPlannerV3
             'minimum_layover_minutes' => (int) ($options['minimum_layover_minutes'] ?? self::DEFAULT_MIN_LAYOVER_MINUTES),
             'max_duration_hours' => (int) ($options['max_duration_hours'] ?? self::DEFAULT_MAX_DURATION_HOURS),
             'max_connections_scanned' => (int) ($options['max_connections_scanned'] ?? self::DEFAULT_MAX_CONNECTIONS_SCANNED),
+            'max_outgoing_connections_per_label' => (int) ($options['max_outgoing_connections_per_label'] ?? self::DEFAULT_MAX_OUTGOING_CONNECTIONS_PER_LABEL),
         ] as $key => $value) {
-            $minimum = $key === 'max_segments' || $key === 'max_results' || $key === 'max_duration_hours' || $key === 'max_connections_scanned' ? 1 : 0;
+            $minimum = $key === 'max_segments' || $key === 'max_results' || $key === 'max_duration_hours' || $key === 'max_connections_scanned' || $key === 'max_outgoing_connections_per_label' ? 1 : 0;
 
             if ($value < $minimum) {
                 throw new InvalidArgumentException("{$key} must be greater than or equal to {$minimum}.");
@@ -568,6 +664,7 @@ class TripPlannerV3
             'minimum_layover_minutes' => (int) ($options['minimum_layover_minutes'] ?? self::DEFAULT_MIN_LAYOVER_MINUTES),
             'max_duration_hours' => (int) ($options['max_duration_hours'] ?? self::DEFAULT_MAX_DURATION_HOURS),
             'max_connections_scanned' => (int) ($options['max_connections_scanned'] ?? self::DEFAULT_MAX_CONNECTIONS_SCANNED),
+            'max_outgoing_connections_per_label' => (int) ($options['max_outgoing_connections_per_label'] ?? self::DEFAULT_MAX_OUTGOING_CONNECTIONS_PER_LABEL),
             'airline' => $options['airline'] ?? null,
             'sort' => $sort,
         ];
@@ -609,12 +706,80 @@ class TripPlannerV3
         throw new InvalidArgumentException("Unknown airport code: {$code}");
     }
 
+    /**
+     * @return list<string>
+     */
+    private function nearbyAirportCodes(float $latitude, float $longitude, float $radiusKm): array
+    {
+        $matches = [];
+
+        foreach ($this->airportsByCode as $code => $airport) {
+            $distanceKm = $this->distanceKm(
+                $latitude,
+                $longitude,
+                (float) $airport['latitude'],
+                (float) $airport['longitude'],
+            );
+
+            if ($distanceKm <= $radiusKm) {
+                $matches[] = [
+                    'code' => $code,
+                    'distance_km' => $distanceKm,
+                ];
+            }
+        }
+
+        usort(
+            $matches,
+            fn (array $left, array $right): int => $left['distance_km'] <=> $right['distance_km']
+                ?: $left['code'] <=> $right['code'],
+        );
+
+        return array_column($matches, 'code');
+    }
+
+    private function distanceKm(float $fromLatitude, float $fromLongitude, float $toLatitude, float $toLongitude): float
+    {
+        $earthRadiusKm = 6371.0;
+        $fromLatitudeRadians = deg2rad($fromLatitude);
+        $toLatitudeRadians = deg2rad($toLatitude);
+        $latitudeDelta = deg2rad($toLatitude - $fromLatitude);
+        $longitudeDelta = deg2rad($toLongitude - $fromLongitude);
+
+        $a = sin($latitudeDelta / 2) ** 2
+            + cos($fromLatitudeRadians) * cos($toLatitudeRadians) * sin($longitudeDelta / 2) ** 2;
+
+        return $earthRadiusKm * 2 * atan2(sqrt($a), sqrt(1 - $a));
+    }
+
     private function assertDate(string $date): void
     {
         $parsed = DateTimeImmutable::createFromFormat('!Y-m-d', $date);
 
         if (! $parsed || $parsed->format('Y-m-d') !== $date) {
             throw new InvalidArgumentException("Invalid date: {$date}. Expected YYYY-MM-DD.");
+        }
+    }
+
+    private function assertNonNegativeFloatOption(array $options, string $key): void
+    {
+        if (! array_key_exists($key, $options)) {
+            return;
+        }
+
+        if (! is_numeric($options[$key]) || (float) $options[$key] < 0) {
+            throw new InvalidArgumentException("{$key} must be greater than or equal to 0.");
+        }
+    }
+
+    private function assertCoordinates(float $latitude, float $longitude, string $label): void
+    {
+        if ($latitude < -90 || $latitude > 90) {
+            throw new InvalidArgumentException("{$label} latitude must be between -90 and 90.");
+        }
+
+        if ($longitude < -180 || $longitude > 180) {
+            throw new InvalidArgumentException("{$label} longitude must be between -180 and 180.");
         }
     }
 

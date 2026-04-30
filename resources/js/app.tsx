@@ -1,5 +1,6 @@
 import React, { FormEvent, useEffect, useMemo, useState } from 'react';
 import { createRoot } from 'react-dom/client';
+import { format } from 'date-fns';
 import {
     CalendarDays,
     ChevronDown,
@@ -12,6 +13,8 @@ import {
 import mockFlightData from '../../data/generated/trip_data_ac_ca.json';
 import { Badge } from './components/ui/badge';
 import { Button } from './components/ui/button';
+import { Calendar } from './components/ui/calendar';
+import { Popover, PopoverContent, PopoverTrigger } from './components/ui/popover';
 
 type TripType = 'one_way' | 'round_trip';
 type SortKey = 'price' | 'departure' | 'arrival' | 'duration';
@@ -132,6 +135,25 @@ const useBackend = dataSource !== 'mock';
 const MAX_RESULTS = 24;
 const MIN_LAYOVER_MINUTES = 60;
 const MAX_DURATION_MINUTES = 36 * 60;
+const AIRPORT_SEARCH_PRIORITY = [
+    'YUL',
+    'YVR',
+    'YYZ',
+    'LAS',
+    'LAX',
+    'JFK',
+    'LGA',
+    'EWR',
+    'SFO',
+    'ORD',
+    'MIA',
+    'YQB',
+    'YOW',
+    'YYC',
+    'YEG',
+    'YWG',
+    'YHZ',
+].reduce<Map<string, number>>((map, code, index) => map.set(code, index), new Map());
 
 let airportByCode = new Map(mockData.airports.map((airport) => [airport.code, airport]));
 let airlineByCode = new Map(mockData.airlines.map((airline) => [airline.code, airline]));
@@ -266,7 +288,7 @@ function App() {
                         <h1>Build one-way and round-trip flight itineraries.</h1>
                         <p>Search static airline data with dates, stops, prices, and timezone-aware flight times.</p>
                     </div>
-                    <SearchForm data={referenceData} search={search} onChange={updateSearch} onSubmit={submitSearch} />
+                    <SearchForm search={search} onChange={updateSearch} onSubmit={submitSearch} />
                 </div>
             </section>
             {(hasSubmittedSearch || isSearching) && (
@@ -358,13 +380,12 @@ function ApproachFooter() {
 }
 
 type SearchFormProps = {
-    data: DataSet;
     search: TripSearchParams;
     onChange: (next: Partial<TripSearchParams>) => void;
     onSubmit: (event: FormEvent<HTMLFormElement>) => void;
 };
 
-function SearchForm({ data, search, onChange, onSubmit }: SearchFormProps) {
+function SearchForm({ search, onChange, onSubmit }: SearchFormProps) {
     return (
         <form id="search" className="search-panel" onSubmit={onSubmit}>
             <div className="form-topline">
@@ -384,57 +405,74 @@ function SearchForm({ data, search, onChange, onSubmit }: SearchFormProps) {
                         One way
                     </button>
                 </div>
-                <div className="compact-fields">
-                    <label>
-                        Preferred airline
-                        <select value={search.airline} onChange={(event) => onChange({ airline: event.target.value })}>
-                            <option value="">Any airline</option>
-                            {data.airlines.map((airline) => (
-                                <option key={airline.code} value={airline.code}>
-                                    {airline.name}
-                                </option>
-                            ))}
-                        </select>
-                    </label>
-                    <label>
-                        Sort
-                        <select value={search.sort} onChange={(event) => onChange({ sort: event.target.value as SortKey })}>
-                            <option value="price">Lowest price</option>
-                            <option value="departure">Earliest departure</option>
-                            <option value="arrival">Earliest arrival</option>
-                            <option value="duration">Shortest duration</option>
-                        </select>
-                    </label>
-                </div>
             </div>
             <div className="search-grid">
                 <AirportSelect label="From" value={search.origin} onChange={(origin) => onChange({ origin })} />
                 <AirportSelect label="To" value={search.destination} onChange={(destination) => onChange({ destination })} />
-                <label className="field">
-                    Departure
-                    <input
-                        min={todayIso}
-                        type="date"
-                        value={search.departureDate}
-                        onChange={(event) => onChange({ departureDate: event.target.value })}
-                    />
-                </label>
-                <label className={`field ${search.tripType === 'one_way' ? 'field-disabled' : ''}`}>
-                    Return
-                    <input
-                        disabled={search.tripType === 'one_way'}
-                        min={search.departureDate}
-                        type="date"
-                        value={search.returnDate}
-                        onChange={(event) => onChange({ returnDate: event.target.value })}
-                    />
-                </label>
+                <DatePickerField
+                    label="Departure"
+                    min={todayIso}
+                    value={search.departureDate}
+                    onChange={(departureDate) => onChange({ departureDate })}
+                />
+                <DatePickerField
+                    disabled={search.tripType === 'one_way'}
+                    label="Return"
+                    min={search.departureDate}
+                    value={search.returnDate}
+                    onChange={(returnDate) => onChange({ returnDate })}
+                />
                 <Button className="search-button" size="lg" type="submit">
                     <Search size={18} />
                     Search
                 </Button>
             </div>
         </form>
+    );
+}
+
+type DatePickerFieldProps = {
+    disabled?: boolean;
+    label: string;
+    min: string;
+    value: string;
+    onChange: (value: string) => void;
+};
+
+function DatePickerField({ disabled = false, label, min, value, onChange }: DatePickerFieldProps) {
+    const selectedDate = parseIsoDate(value);
+    const minDate = parseIsoDate(min);
+
+    return (
+        <div className={`field date-picker-field ${disabled ? 'field-disabled' : ''}`}>
+            <label>{label}</label>
+            <Popover>
+                <PopoverTrigger asChild>
+                    <Button
+                        aria-label={`Choose ${label.toLowerCase()} date`}
+                        className="date-trigger"
+                        disabled={disabled}
+                        type="button"
+                        variant="outline"
+                    >
+                        <CalendarDays size={18} />
+                        <span>{format(selectedDate, 'EEE, MMM d')}</span>
+                    </Button>
+                </PopoverTrigger>
+                <PopoverContent>
+                    <Calendar
+                        disabled={(date) => startOfLocalDay(date).getTime() < minDate.getTime()}
+                        mode="single"
+                        selected={selectedDate}
+                        onSelect={(date) => {
+                            if (date) {
+                                onChange(toIsoDate(date));
+                            }
+                        }}
+                    />
+                </PopoverContent>
+            </Popover>
+        </div>
     );
 }
 
@@ -445,14 +483,35 @@ type AirportSelectProps = {
 };
 
 function AirportSelect({ label, value, onChange }: AirportSelectProps) {
+    const inputId = React.useId();
     const [query, setQuery] = useState('');
     const [isOpen, setIsOpen] = useState(false);
     const selected = airportByCode.get(value);
+    const normalizedQuery = normalizeSearchText(query);
     const visibleAirports = airportOptions
-        .filter((airport) => {
-            const haystack = `${airport.code} ${airport.city} ${airport.name} ${airport.country_code}`.toLowerCase();
-            return haystack.includes(query.trim().toLowerCase());
+        .map((airport) => ({
+            airport,
+            rank: rankAirportMatch(airport, normalizedQuery),
+        }))
+        .filter((match) => match.rank < Number.POSITIVE_INFINITY)
+        .sort((left, right) => {
+            if (left.rank !== right.rank) {
+                return left.rank - right.rank;
+            }
+
+            const priorityDifference = airportSearchPriority(left.airport) - airportSearchPriority(right.airport);
+            if (priorityDifference !== 0) {
+                return priorityDifference;
+            }
+
+            const regionDifference = airportRegionPriority(left.airport) - airportRegionPriority(right.airport);
+            if (regionDifference !== 0) {
+                return regionDifference;
+            }
+
+            return `${left.airport.city} ${left.airport.code}`.localeCompare(`${right.airport.city} ${right.airport.code}`);
         })
+        .map((match) => match.airport)
         .slice(0, 8);
 
     function selectAirport(code: string) {
@@ -471,36 +530,41 @@ function AirportSelect({ label, value, onChange }: AirportSelectProps) {
                 }, 120);
             }}
         >
-            <label>{label}</label>
-            <span className="field-icon"><Plane size={22} /></span>
-            <input
-                autoComplete="off"
-                className="airport-input"
-                type="text"
-                value={isOpen ? query : formatAirportField(selected)}
-                onChange={(event) => {
-                    setQuery(event.target.value);
-                    setIsOpen(true);
-                }}
-                onFocus={() => {
-                    setQuery('');
-                    setIsOpen(true);
-                }}
-            />
-            {selected && (
-                <button
-                    aria-label={`Clear ${label.toLowerCase()} airport`}
-                    className="field-clear"
-                    type="button"
-                    onMouseDown={(event) => event.preventDefault()}
-                    onClick={() => {
-                        setQuery('');
-                        setIsOpen(true);
-                    }}
-                >
-                    <X size={18} />
-                </button>
-            )}
+            <div className="airport-control">
+                <Plane className="airport-control-icon" size={22} />
+                <div className="airport-input-stack">
+                    <label htmlFor={inputId}>{label === 'From' ? 'Leaving from' : 'Going to'}</label>
+                    <input
+                        autoComplete="off"
+                        className="airport-input"
+                        id={inputId}
+                        type="text"
+                        value={isOpen ? query : formatAirportField(selected)}
+                        onChange={(event) => {
+                            setQuery(event.target.value);
+                            setIsOpen(true);
+                        }}
+                        onFocus={() => {
+                            setQuery('');
+                            setIsOpen(true);
+                        }}
+                    />
+                </div>
+                {selected && (
+                    <button
+                        aria-label={`Clear ${label.toLowerCase()} airport`}
+                        className="field-clear"
+                        type="button"
+                        onMouseDown={(event) => event.preventDefault()}
+                        onClick={() => {
+                            setQuery('');
+                            setIsOpen(true);
+                        }}
+                    >
+                        <X size={18} />
+                    </button>
+                )}
+            </div>
             {isOpen && (
                 <div className="airport-dropdown">
                     {visibleAirports.length > 0 ? (
@@ -736,11 +800,11 @@ function TripLeg({ label, segments }: TripLegProps) {
             <div className="leg-summary">
                 <div className="time-route">
                     <strong>
-                        {formatTime(first.departureAt)} <span>{first.departureAirport.code}</span>
+                        {formatTime(first.departureAt, first.departureAirport.timezone)} <span>{first.departureAirport.code}</span>
                     </strong>
                     <Timeline stops={stops} />
                     <strong>
-                        {formatTime(last.arrivalAt)} <span>{last.arrivalAirport.code}</span>
+                        {formatTime(last.arrivalAt, last.arrivalAirport.timezone)} <span>{last.arrivalAirport.code}</span>
                     </strong>
                 </div>
                 <div className="leg-meta">
@@ -781,15 +845,15 @@ function FlightDetails({ segments }: { segments: Segment[] }) {
                         </div>
                         <div className="detail-times">
                             <div>
-                                <strong>{formatTime(segment.departureAt)}</strong>
-                                <span>{formatDateShort(segment.departureAt)}</span>
+                                <strong>{formatTime(segment.departureAt, segment.departureAirport.timezone)}</strong>
+                                <span>{formatDateShort(segment.departureAt, segment.departureAirport.timezone)}</span>
                                 <span>
                                     {segment.departureAirport.city} ({segment.departureAirport.code})
                                 </span>
                             </div>
                             <div>
-                                <strong>{formatTime(segment.arrivalAt)}</strong>
-                                <span>{formatDateShort(segment.arrivalAt)}</span>
+                                <strong>{formatTime(segment.arrivalAt, segment.arrivalAirport.timezone)}</strong>
+                                <span>{formatDateShort(segment.arrivalAt, segment.arrivalAirport.timezone)}</span>
                                 <span>
                                     {segment.arrivalAirport.city} ({segment.arrivalAirport.code})
                                 </span>
@@ -1204,6 +1268,104 @@ function formatAirportField(airport?: Airport) {
     return `${airport.city}, ${airport.code} - ${airport.name}`;
 }
 
+function rankAirportMatch(airport: Airport, query: string) {
+    if (query === '') {
+        return 20;
+    }
+
+    const code = normalizeSearchText(airport.code);
+    const city = normalizeSearchText(airport.city);
+    const name = normalizeSearchText(airport.name);
+    const country = normalizeSearchText(airport.country_code);
+
+    if (code === query) {
+        return 0;
+    }
+
+    if (code.startsWith(query)) {
+        return 1;
+    }
+
+    if (city === query) {
+        return 2;
+    }
+
+    if (startsWithSearchWord(city, query)) {
+        return 3;
+    }
+
+    if (name === query) {
+        return 4;
+    }
+
+    if (startsWithSearchWord(name, query)) {
+        return 5;
+    }
+
+    if (query.length >= 2 && code.includes(query)) {
+        return 6;
+    }
+
+    if (query.length >= 4 && city.includes(query)) {
+        return 7;
+    }
+
+    if (query.length >= 4 && name.includes(query)) {
+        return 8;
+    }
+
+    if (query.length >= 2 && country === query) {
+        return 9;
+    }
+
+    return Number.POSITIVE_INFINITY;
+}
+
+function airportSearchPriority(airport: Airport) {
+    return AIRPORT_SEARCH_PRIORITY.get(airport.code) ?? Number.MAX_SAFE_INTEGER;
+}
+
+function airportRegionPriority(airport: Airport) {
+    if (airport.country_code === 'CA') {
+        return 0;
+    }
+
+    if (airport.country_code === 'US') {
+        return 1;
+    }
+
+    return 2;
+}
+
+function normalizeSearchText(value: string) {
+    return value
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .toLowerCase()
+        .trim();
+}
+
+function startsWithSearchWord(value: string, query: string) {
+    return value.split(/[^a-z0-9]+/).some((word) => word.startsWith(query));
+}
+
+function parseIsoDate(date: string) {
+    const [year, month, day] = date.split('-').map(Number);
+    return new Date(year, month - 1, day);
+}
+
+function startOfLocalDay(date: Date) {
+    return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+}
+
+function toIsoDate(date: Date) {
+    return [
+        date.getFullYear(),
+        String(date.getMonth() + 1).padStart(2, '0'),
+        String(date.getDate()).padStart(2, '0'),
+    ].join('-');
+}
+
 function addDays(date: string, days: number) {
     const [year, month, day] = date.split('-').map(Number);
     const next = new Date(Date.UTC(year, month - 1, day + days));
@@ -1221,16 +1383,18 @@ function formatCurrency(cents: number) {
     }).format(cents / 100);
 }
 
-function formatTime(date: Date) {
+function formatTime(date: Date, timeZone?: string) {
     return new Intl.DateTimeFormat('en-CA', {
+        timeZone,
         hour: 'numeric',
         minute: '2-digit',
         hour12: true,
     }).format(date);
 }
 
-function formatDateShort(date: Date) {
+function formatDateShort(date: Date, timeZone?: string) {
     return new Intl.DateTimeFormat('en-CA', {
+        timeZone,
         weekday: 'short',
         month: 'short',
         day: 'numeric',
@@ -1262,10 +1426,17 @@ function labelForSort(sort: SortKey) {
     }[sort];
 }
 
-const root = document.getElementById('root');
+type ReactRootElement = HTMLElement & {
+    reactRoot?: ReturnType<typeof createRoot>;
+};
+
+const root = document.getElementById('root') as ReactRootElement | null;
 
 if (root) {
-    createRoot(root).render(
+    const appRoot = root.reactRoot ?? createRoot(root);
+    root.reactRoot = appRoot;
+
+    appRoot.render(
         <React.StrictMode>
             <App />
         </React.StrictMode>,
