@@ -37,8 +37,6 @@ class TripPlannerV4
 
     private const BEST_OVERNIGHT_PENALTY_CENTS = 10000;
 
-    private const PREFERRED_AIRLINE_SEGMENT_BONUS_CENTS = 10000;
-
     /** @var array<string, array<string, mixed>> */
     private array $airportsByCode = [];
 
@@ -54,10 +52,10 @@ class TripPlannerV4
     /** @var array<string, list<array<string, mixed>>> */
     private array $routeFlightCache = [];
 
-    /** @var array<string, list<array{to: string, weight: int}>> */
+    /** @var array<string, list<array{to: string, weight: int, airline?: string}>> */
     private array $routeGraph = [];
 
-    /** @var array<string, list<array{from: string, weight: int}>> */
+    /** @var array<string, list<array{from: string, weight: int, airline?: string}>> */
     private array $reverseRouteGraph = [];
 
     private DateTimeImmutable $nowUtc;
@@ -66,7 +64,7 @@ class TripPlannerV4
      * @param  array{
      *     airports: array<int, array<string, mixed>>,
      *     flights?: array<int, array<string, mixed>>,
-     *     routes?: array<int, array{from: string, to: string, weight: int}>,
+     *     routes?: array<int, array{from: string, to: string, weight: int, airline?: string}>,
      *     route_flight_resolver?: callable(string, string, int, ?string): list<array<string, mixed>>
      * }  $data
      */
@@ -90,10 +88,12 @@ class TripPlannerV4
                 $this->routeGraph[$route['from']][] = [
                     'to' => $route['to'],
                     'weight' => $route['weight'],
+                    ...(isset($route['airline']) ? ['airline' => $route['airline']] : []),
                 ];
                 $this->reverseRouteGraph[$route['to']][] = [
                     'from' => $route['from'],
                     'weight' => $route['weight'],
+                    ...(isset($route['airline']) ? ['airline' => $route['airline']] : []),
                 ];
             }
         }
@@ -109,7 +109,7 @@ class TripPlannerV4
             $weight = $this->typicalFlightWeight($flight);
 
             $this->flightsByRoute[$from][$to][] = $flight;
-            $bestRouteWeights[$from][$to] = min($bestRouteWeights[$from][$to] ?? PHP_INT_MAX, $weight);
+            $bestRouteWeights[$from][$to][$flight['airline']] = min($bestRouteWeights[$from][$to][$flight['airline']] ?? PHP_INT_MAX, $weight);
         }
 
         foreach ($this->flightsByRoute as $from => $routes) {
@@ -120,9 +120,10 @@ class TripPlannerV4
                         ?: $left['departure_time'] <=> $right['departure_time'],
                 );
 
-                $weight = $bestRouteWeights[$from][$to];
-                $this->routeGraph[$from][] = ['to' => $to, 'weight' => $weight];
-                $this->reverseRouteGraph[$to][] = ['from' => $from, 'weight' => $weight];
+                foreach ($bestRouteWeights[$from][$to] as $airline => $weight) {
+                    $this->routeGraph[$from][] = ['to' => $to, 'weight' => $weight, 'airline' => $airline];
+                    $this->reverseRouteGraph[$to][] = ['from' => $from, 'weight' => $weight, 'airline' => $airline];
+                }
             }
         }
 
@@ -367,6 +368,10 @@ class TripPlannerV4
                 $candidateEdges = [];
 
                 foreach ($this->routeGraph[$path['airport']] ?? [] as $edge) {
+                    if ($options['airline'] !== null && ($edge['airline'] ?? null) !== $options['airline']) {
+                        continue;
+                    }
+
                     $nextAirport = $edge['to'];
                     if (! isset($lowerBounds[$nextAirport])) {
                         continue;
@@ -511,7 +516,7 @@ class TripPlannerV4
                         'segments' => $segments,
                         'total_price_cents' => $totalPriceCents,
                         'first_departure_utc' => $firstDepartureUtc,
-                        'score' => $this->bestScoreForItinerary($segments, $totalPriceCents, $options['airline']),
+                        'score' => $this->bestScoreForItinerary($segments, $totalPriceCents),
                     ];
                 }
             }
@@ -529,7 +534,7 @@ class TripPlannerV4
         }
 
         return array_map(
-            fn (array $state): array => $this->formatItinerary($state['segments'], $state['total_price_cents'], $options['airline']),
+            fn (array $state): array => $this->formatItinerary($state['segments'], $state['total_price_cents']),
             $states,
         );
     }
@@ -570,44 +575,26 @@ class TripPlannerV4
      * @param list<array<string, mixed>> $flights
      * @return list<array<string, mixed>>
      */
-    private function rankedRouteFlights(array $flights, int $limit, ?string $preferredAirline): array
+    private function rankedRouteFlights(array $flights, int $limit, ?string $restrictedAirline): array
     {
         if ($limit < 1 || $flights === []) {
             return [];
         }
 
-        $candidates = array_slice($flights, 0, $limit);
-
-        if ($preferredAirline !== null) {
-            $preferredCount = 0;
-            foreach ($flights as $flight) {
-                if ($flight['airline'] !== $preferredAirline) {
-                    continue;
-                }
-
-                $candidates[] = $flight;
-                $preferredCount++;
-
-                if ($preferredCount >= $limit) {
-                    break;
-                }
-            }
+        if ($restrictedAirline !== null) {
+            $flights = array_values(array_filter(
+                $flights,
+                fn (array $flight): bool => $flight['airline'] === $restrictedAirline,
+            ));
         }
-
-        $uniqueFlights = [];
-        foreach ($candidates as $flight) {
-            $uniqueFlights[$flight['airline'].'|'.$flight['number']] = $flight;
-        }
-
-        $candidates = array_values($uniqueFlights);
 
         usort(
-            $candidates,
-            fn (array $left, array $right): int => $this->preferredFlightWeight($left, $preferredAirline) <=> $this->preferredFlightWeight($right, $preferredAirline)
+            $flights,
+            fn (array $left, array $right): int => $this->typicalFlightWeight($left) <=> $this->typicalFlightWeight($right)
                 ?: $left['departure_time'] <=> $right['departure_time'],
         );
 
-        return array_slice($candidates, 0, $limit);
+        return array_slice($flights, 0, $limit);
     }
 
     /**
@@ -653,15 +640,6 @@ class TripPlannerV4
         return $this->priceToCents($flight['price'])
             + ($this->typicalFlightDurationMinutes($flight) * self::BEST_DURATION_MINUTE_WEIGHT_CENTS)
             + self::BEST_CONNECTION_PENALTY_CENTS;
-    }
-
-    private function preferredFlightWeight(array $flight, ?string $preferredAirline): int
-    {
-        $bonus = $preferredAirline !== null && $flight['airline'] === $preferredAirline
-            ? self::PREFERRED_AIRLINE_SEGMENT_BONUS_CENTS
-            : 0;
-
-        return max(0, $this->typicalFlightWeight($flight) - $bonus);
     }
 
     private function typicalFlightDurationMinutes(array $flight): int
@@ -750,7 +728,7 @@ class TripPlannerV4
         ];
     }
 
-    private function formatItinerary(array $segments, int $totalPriceCents, ?string $preferredAirline = null): array
+    private function formatItinerary(array $segments, int $totalPriceCents): array
     {
         $firstSegment = $segments[0];
         $lastSegment = $segments[count($segments) - 1];
@@ -765,7 +743,7 @@ class TripPlannerV4
             'segment_count' => count($segments),
             'total_price' => $this->centsToPrice($totalPriceCents),
             'total_price_cents' => $totalPriceCents,
-            'best_score' => $this->bestScoreForItinerary($segments, $totalPriceCents, $preferredAirline),
+            'best_score' => $this->bestScoreForItinerary($segments, $totalPriceCents),
             'departure_at' => $firstSegment['departure_at'],
             'arrival_at' => $lastSegment['arrival_at'],
             'departure_utc' => $firstSegment['departure_utc'],
@@ -775,7 +753,7 @@ class TripPlannerV4
         ];
     }
 
-    private function bestScoreForItinerary(array $segments, int $totalPriceCents, ?string $preferredAirline = null): int
+    private function bestScoreForItinerary(array $segments, int $totalPriceCents): int
     {
         $firstSegment = $segments[0];
         $lastSegment = $segments[count($segments) - 1];
@@ -787,16 +765,10 @@ class TripPlannerV4
             ? 0
             : self::BEST_OVERNIGHT_PENALTY_CENTS;
 
-        $preferredAirlineBonus = $preferredAirline === null
-            ? 0
-            : count(array_filter($segments, fn (array $segment): bool => $segment['airline'] === $preferredAirline))
-                * self::PREFERRED_AIRLINE_SEGMENT_BONUS_CENTS;
-
         return max(0, $totalPriceCents
             + ($durationMinutes * self::BEST_DURATION_MINUTE_WEIGHT_CENTS)
             + ($connections * self::BEST_CONNECTION_PENALTY_CENTS)
-            + $overnightPenalty
-            - $preferredAirlineBonus);
+            + $overnightPenalty);
     }
 
     private function normalizeOptions(array $options): array

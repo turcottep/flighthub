@@ -284,7 +284,7 @@ class FlightDataRepository
 
     /**
      * @param array<string, array<string, mixed>> $airportsByCode
-     * @return list<array{from: string, to: string, weight: int}>
+     * @return list<array{from: string, to: string, weight: int, airline: string}>
      */
     private function loadRouteSummariesFromDatabase(array $airportsByCode): array
     {
@@ -293,11 +293,13 @@ class FlightDataRepository
             ->select([
                 'departure_airport_code',
                 'arrival_airport_code',
+                'airline_code',
                 DB::raw('MIN(price) as minimum_price'),
             ])
-            ->groupBy('departure_airport_code', 'arrival_airport_code')
+            ->groupBy('departure_airport_code', 'arrival_airport_code', 'airline_code')
             ->orderBy('departure_airport_code')
             ->orderBy('arrival_airport_code')
+            ->orderBy('airline_code')
             ->cursor();
 
         foreach ($rows as $row) {
@@ -318,6 +320,7 @@ class FlightDataRepository
             $routes[] = [
                 'from' => $from,
                 'to' => $to,
+                'airline' => $row->airline_code,
                 'weight' => $this->priceToCents($row->minimum_price)
                     + ($estimatedDurationMinutes * self::BEST_DURATION_MINUTE_WEIGHT_CENTS)
                     + self::BEST_CONNECTION_PENALTY_CENTS,
@@ -336,7 +339,13 @@ class FlightDataRepository
             return [];
         }
 
-        $flights = $this->routeFlightQuery($from, $to)
+        $query = $this->routeFlightQuery($from, $to);
+
+        if ($airline !== null) {
+            $query->where('airline_code', strtoupper($airline));
+        }
+
+        return $query
             ->limit($limit)
             ->get([
                 'airline_code',
@@ -349,34 +358,6 @@ class FlightDataRepository
             ])
             ->map(fn (object $flight): array => $this->formatFlightRow($flight))
             ->all();
-
-        if ($airline !== null) {
-            $preferredFlights = $this->routeFlightQuery($from, $to)
-                ->where('airline_code', strtoupper($airline))
-                ->limit($limit)
-                ->get([
-                    'airline_code',
-                    'number',
-                    'departure_airport_code',
-                    'departure_time',
-                    'arrival_airport_code',
-                    'arrival_time',
-                    'price',
-                ])
-                ->map(fn (object $flight): array => $this->formatFlightRow($flight))
-                ->all();
-
-            foreach ($preferredFlights as $flight) {
-                $flights[] = $flight;
-            }
-        }
-
-        $uniqueFlights = [];
-        foreach ($flights as $flight) {
-            $uniqueFlights[$flight['airline'].'|'.$flight['number']] = $flight;
-        }
-
-        return array_values($uniqueFlights);
     }
 
     private function routeFlightQuery(string $from, string $to): Builder

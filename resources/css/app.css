@@ -252,14 +252,6 @@ button {
     align-items: end;
 }
 
-.search-grid-open-jaw {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-}
-
-.search-grid-open-jaw .search-button {
-    grid-column: span 2;
-}
-
 .search-options {
     display: flex;
     min-height: 32px;
@@ -293,7 +285,13 @@ button {
     width: 100%;
     max-width: 280px;
     min-width: 0;
+    gap: 12px;
     margin-top: 14px;
+}
+
+.advanced-nearby-options {
+    display: grid;
+    gap: 10px;
 }
 
 .advanced-select {
@@ -2184,8 +2182,7 @@ button {
         padding: 0;
     }
 
-    .search-button,
-    .search-grid-open-jaw .search-button {
+    .search-button {
         grid-column: auto;
     }
 

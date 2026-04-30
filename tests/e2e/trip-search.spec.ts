@@ -193,22 +193,16 @@ test('shows an empty state for valid routes with no matching trips', async ({ pa
     await expect(page.locator('.itinerary-card')).toHaveCount(0);
 });
 
-test('sort tabs submit new searches with the selected sort', async ({ page }) => {
+test('sort tabs update the visible result order', async ({ page }) => {
     await page.getByRole('button', { name: 'One way' }).click();
 
     const initialSearch = waitForSearch(page, '/api/trips/search/one-way');
     await page.getByRole('button', { name: /^Search$/ }).click();
     await initialSearch;
 
-    const durationSearch = waitForSearch(page, '/api/trips/search/one-way');
-    await page.getByRole('button', { name: /shortest/i }).click();
-    const durationResponse = await durationSearch;
-    expect(new URL(durationResponse.url()).searchParams.get('sort')).toBe('duration');
+    await page.getByRole('button', { name: /time/i }).click();
     await expect(page.getByText('Sorted by shortest duration')).toBeVisible();
 
-    const departureSearch = waitForSearch(page, '/api/trips/search/one-way');
-    await page.getByRole('button', { name: /flexible/i }).click();
-    const departureResponse = await departureSearch;
-    expect(new URL(departureResponse.url()).searchParams.get('sort')).toBe('departure');
-    await expect(page.getByText('Sorted by earliest departure')).toBeVisible();
+    await page.getByRole('button', { name: /price/i }).click();
+    await expect(page.getByText('Sorted by lowest price')).toBeVisible();
 });

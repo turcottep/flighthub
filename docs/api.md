@@ -54,7 +54,7 @@ GET /api/trips/search/one-way
 | `origin` | yes | 3-character airport or city code, such as `YUL` or `YMQ`. |
 | `destination` | yes | 3-character airport or city code, such as `YVR`. |
 | `departure_date` | yes | Departure date in `YYYY-MM-DD` format. |
-| `airline` | no | 2-character preferred airline code, such as `AC`. This boosts matching flights in ranking; it does not remove other airlines. |
+| `airline` | no | 2-character airline code, such as `AC`. When present, every returned flight segment must use that airline. |
 | `sort` | no | `best`, `price`, `departure`, `arrival`, or `duration`. |
 | `max_stops` | no | Maximum connections. `0` means direct only. |
 | `max_segments` | no | Maximum flight segments. Overrides `max_stops` when both are present. |
@@ -126,7 +126,7 @@ GET /api/trips/search/round-trip
 | `destination` | yes | 3-character airport or city code. |
 | `departure_date` | yes | Outbound date in `YYYY-MM-DD` format. |
 | `return_date` | yes | Return date in `YYYY-MM-DD` format. |
-| `airline` | no | 2-character preferred airline code. This boosts matching flights in ranking; it does not remove other airlines. |
+| `airline` | no | 2-character airline code. When present, every returned flight segment must use that airline. |
 | `sort` | no | `best`, `price`, `departure`, `arrival`, or `duration`. |
 | `max_stops` | no | Maximum connections per one-way leg. |
 | `max_segments` | no | Maximum flight segments per one-way leg. Overrides `max_stops` when both are present. |

@@ -71,7 +71,6 @@ type TripSearchParams = {
     airline: string;
     sort: SortKey;
     maxStops: number;
-    differentReturnAirports: boolean;
     includeNearbyAirports: boolean;
     nearbyRadiusKm: number;
     multiCityLegs: MultiCityLeg[];
@@ -315,7 +314,6 @@ function App() {
         airline: '',
         sort: 'best',
         maxStops: DEFAULT_MAX_STOPS,
-        differentReturnAirports: false,
         includeNearbyAirports: false,
         nearbyRadiusKm: 50,
         multiCityLegs: [
@@ -444,7 +442,7 @@ function App() {
         setSearch((current) => ({ ...current, sort }));
         setActiveFareTab(fareTab);
         setExpandedId(null);
-        setResults((current) => sortItineraries(current, sort, submittedSearch.airline));
+        setResults((current) => sortItineraries(current, sort));
     }
 
     function changeResultsPage(page: number) {
@@ -514,7 +512,7 @@ function App() {
                 <div className="shell">
                     <div className="hero-copy">
                         <h1>Build flight itineraries across simple and complex trips.</h1>
-                        <p>Search one-way, round-trip, open return, nearby airport, and multi-city routes.</p>
+                        <p>Search one-way, round-trip, nearby airport, and advanced multi-leg routes.</p>
                     </div>
                     <SearchForm data={referenceData} search={search} onChange={updateSearch} onSubmit={submitSearch} />
                 </div>
@@ -586,7 +584,7 @@ function ApproachFooter() {
                         <h3>Extra coverage</h3>
                         <p>
                             The submission also includes Postgres storage, API documentation, automated tests, sorting,
-                            pagination, nearby airports, preferred-airline ranking, open-jaw trips, and multi-city trips.
+                            pagination, nearby airports, airline restriction, and advanced multi-leg trips.
                         </p>
                     </section>
                     <section>
@@ -741,11 +739,11 @@ function ApproachFooter() {
                             </p>
                         </article>
                         <article>
-                            <strong>Preferred airline</strong>
-                            <h4>Ranking input</h4>
+                            <strong>Airline restriction</strong>
+                            <h4>Matching segments only</h4>
                             <p>
-                                Preferred-airline matches lower the itinerary score. The route remains valid when only
-                                part of the connection uses that airline.
+                                When an airline is selected, every returned segment must use that airline. If a mixed
+                                carrier connection would be required, that route is not returned for the restricted search.
                             </p>
                         </article>
                         <article>
@@ -763,6 +761,16 @@ function ApproachFooter() {
                             <p>
                                 Results display local airport times for each segment so the itinerary reads like an
                                 actual flight schedule.
+                            </p>
+                        </article>
+                        <article>
+                            <strong>Known limitation</strong>
+                            <h4>Candidate-set ranking</h4>
+                            <p>
+                                Best, price, and time ranking happen after the planner has narrowed
+                                the search to a bounded candidate set. That keeps searches fast, but it means the app
+                                can miss a globally cheapest or fastest itinerary if that route pattern was pruned
+                                earlier.
                             </p>
                         </article>
                     </div>
@@ -811,7 +819,7 @@ function ApproachFooter() {
                             <h4>Pick flights in stages</h4>
                             <p>
                                 The UI is based on the FlightHub search pattern, but the result flow is adapted for
-                                one-way, round-trip, open-jaw, and multi-city searches. Each leg can be sorted, paged,
+                                one-way, round-trip, and advanced multi-leg searches. Each leg can be sorted, paged,
                                 and selected independently before the trip is reviewed.
                             </p>
                         </article>
@@ -955,21 +963,15 @@ function SearchForm({ data, search, onChange, onSubmit }: SearchFormProps) {
                         type="button"
                         onClick={() => onChange({ tripType: 'multi_city' })}
                     >
-                        Multi-city
+                        Advanced
                     </button>
                 </div>
             </div>
             {search.tripType !== 'multi_city' ? (
                 <>
-                    <div className={`search-grid ${search.tripType === 'round_trip' && search.differentReturnAirports ? 'search-grid-open-jaw' : ''}`}>
+                    <div className="search-grid">
                         <AirportSelect label="From" value={search.origin} onChange={(origin) => onChange({ origin, finalDestination: origin })} />
                         <AirportSelect label="To" value={search.destination} onChange={(destination) => onChange({ destination, returnOrigin: destination })} />
-                        {search.tripType === 'round_trip' && search.differentReturnAirports && (
-                            <>
-                                <AirportSelect label="Returning from" value={search.returnOrigin} onChange={(returnOrigin) => onChange({ returnOrigin })} />
-                                <AirportSelect label="Returning to" value={search.finalDestination} onChange={(finalDestination) => onChange({ finalDestination })} />
-                            </>
-                        )}
                         <DatePickerField
                             label="Departure"
                             min={todayIso}
@@ -999,42 +1001,6 @@ function SearchForm({ data, search, onChange, onSubmit }: SearchFormProps) {
                             More options
                             <ChevronDown className={showAdvanced ? 'open' : ''} size={16} />
                         </button>
-                        {search.tripType === 'round_trip' && (
-                            <label className="check-option">
-                                <input
-                                    checked={search.differentReturnAirports}
-                                    type="checkbox"
-                                    onChange={(event) => onChange({ differentReturnAirports: event.target.checked })}
-                                />
-                                <span>Different return airports</span>
-                            </label>
-                        )}
-                        {search.tripType === 'one_way' && (
-                            <>
-                                <label className="check-option">
-                                    <input
-                                        checked={search.includeNearbyAirports}
-                                        type="checkbox"
-                                        onChange={(event) => onChange({ includeNearbyAirports: event.target.checked })}
-                                    />
-                                    <span>Include nearby airports</span>
-                                </label>
-                                {search.includeNearbyAirports && (
-                                    <label className="radius-field">
-                                        Radius
-                                        <input
-                                            min={5}
-                                            max={1000}
-                                            step={5}
-                                            type="number"
-                                            value={search.nearbyRadiusKm}
-                                            onChange={(event) => onChange({ nearbyRadiusKm: Number(event.target.value) })}
-                                        />
-                                        <span>km</span>
-                                    </label>
-                                )}
-                            </>
-                        )}
                     </div>
                     {showAdvanced && (
                         <AdvancedSearchOptions airlines={data.airlines} search={search} onChange={onChange} />
@@ -1064,7 +1030,7 @@ function SearchForm({ data, search, onChange, onSubmit }: SearchFormProps) {
                             </button>
                         </div>
                     ))}
-                    <div className="multi-city-actions">
+                    <div className="search-options">
                         <button
                             aria-expanded={showAdvanced}
                             className="advanced-toggle"
@@ -1074,6 +1040,11 @@ function SearchForm({ data, search, onChange, onSubmit }: SearchFormProps) {
                             More options
                             <ChevronDown className={showAdvanced ? 'open' : ''} size={16} />
                         </button>
+                    </div>
+                    {showAdvanced && (
+                        <AdvancedSearchOptions airlines={data.airlines} search={search} onChange={onChange} />
+                    )}
+                    <div className="multi-city-actions">
                         <Button disabled={search.multiCityLegs.length >= 5} type="button" variant="outline" onClick={addMultiCityLeg}>
                             <CirclePlus size={18} />
                             Add flight
@@ -1083,9 +1054,6 @@ function SearchForm({ data, search, onChange, onSubmit }: SearchFormProps) {
                             Search
                         </Button>
                     </div>
-                    {showAdvanced && (
-                        <AdvancedSearchOptions airlines={data.airlines} search={search} onChange={onChange} />
-                    )}
                 </div>
             )}
         </form>
@@ -1102,6 +1070,30 @@ function AdvancedSearchOptions({ airlines, search, onChange }: AdvancedSearchOpt
     return (
         <div className="advanced-options">
             <AirlineSelect airlines={airlines} value={search.airline} onChange={(airline) => onChange({ airline })} />
+            <div className="advanced-nearby-options">
+                <label className="check-option">
+                    <input
+                        checked={search.includeNearbyAirports}
+                        type="checkbox"
+                        onChange={(event) => onChange({ includeNearbyAirports: event.target.checked })}
+                    />
+                    <span>Include nearby airports</span>
+                </label>
+                {search.includeNearbyAirports && (
+                    <label className="radius-field">
+                        Radius
+                        <input
+                            min={5}
+                            max={1000}
+                            step={5}
+                            type="number"
+                            value={search.nearbyRadiusKm}
+                            onChange={(event) => onChange({ nearbyRadiusKm: Number(event.target.value) })}
+                        />
+                        <span>km</span>
+                    </label>
+                )}
+            </div>
         </div>
     );
 }
@@ -1144,7 +1136,7 @@ function AirlineSelect({ airlines, value, onChange }: AirlineSelectProps) {
                 }, 120);
             }}
         >
-            <label htmlFor={inputId}>Preferred airline</label>
+            <label htmlFor={inputId}>Restrict to airline</label>
             <div className="airline-control">
                 <input
                     autoComplete="off"
@@ -1459,7 +1451,6 @@ function ResultsView({
                     {!isSearching && !error && tripOptions && (
                         <TripOptionBuilder
                             expandedId={expandedId}
-                            preferredAirline={params.airline}
                             selectedOptionIds={selectedOptionIds}
                             tripOptions={tripOptions}
                             onLegPageChange={onLegPageChange}
@@ -1492,7 +1483,6 @@ function TripOptionBuilder({
     tripOptions,
     selectedOptionIds,
     expandedId,
-    preferredAirline,
     onLegPageChange,
     onSelectLegOption,
     onToggleDetails,
@@ -1500,7 +1490,6 @@ function TripOptionBuilder({
     tripOptions: TripOptionSet;
     selectedOptionIds: Record<string, string>;
     expandedId: string | null;
-    preferredAirline: string;
     onLegPageChange: (legId: string, page: number) => void;
     onSelectLegOption: (legId: string, optionId: string) => void;
     onToggleDetails: (id: string) => void;
@@ -1521,7 +1510,7 @@ function TripOptionBuilder({
     const canGoBack = activeLegIndex > 0;
     const canGoNext = Boolean(activeLegSelectedOptionId) && activeLegIndex < tripOptions.legs.length - 1;
     const sortedActiveOptions = activeLeg
-        ? sortLegOptions(activeLeg.options, activeLegSort, preferredAirline)
+        ? sortLegOptions(activeLeg.options, activeLegSort)
         : [];
     const activeLegPagination = activeLeg
         ? activeLeg.pagination ?? singlePagePagination(activeLeg.options.length)
@@ -2060,7 +2049,7 @@ async function searchTripsFromBackend(params: TripSearchParams, page = 1, search
             results: [],
             pagination: null,
             tripOptions: {
-                type: params.tripType === 'round_trip' && params.differentReturnAirports ? 'open_jaw' : params.tripType,
+                type: params.tripType,
                 legs,
             },
         };
@@ -2121,27 +2110,6 @@ function tripOptionLegRequests(params: TripSearchParams): TripOptionLegRequest[]
         }));
     }
 
-    if (params.tripType === 'round_trip' && params.differentReturnAirports) {
-        return [
-            {
-                id: 'outbound',
-                type: 'outbound',
-                label: 'Outbound',
-                origin: params.origin,
-                destination: params.destination,
-                departureDate: params.departureDate,
-            },
-            {
-                id: 'return',
-                type: 'return',
-                label: 'Return',
-                origin: params.returnOrigin,
-                destination: params.finalDestination,
-                departureDate: params.returnDate,
-            },
-        ];
-    }
-
     return [
         {
             id: 'outbound',
@@ -2175,14 +2143,18 @@ async function searchTripOptionLegFromBackend(
         throw new Error('Trip option search contains an unknown airport.');
     }
 
-    const query = searchId
-        ? new URLSearchParams({ search_id: searchId })
-        : oneWaySearchQuery(params, leg.origin, leg.destination, leg.departureDate);
+    const request = searchId
+        ? {
+            endpoint: '/api/trips/search/one-way',
+            query: new URLSearchParams({ search_id: searchId }),
+        }
+        : oneWaySearchRequest(params, leg.origin, leg.destination, leg.departureDate);
+    const query = request.query;
 
     query.set('page', String(page));
     query.set('per_page', String(PAGE_SIZE));
 
-    const response = await fetchJson<ApiSearchResponse>(`/api/trips/search/one-way?${query.toString()}`);
+    const response = await fetchJson<ApiSearchResponse>(`${request.endpoint}?${query.toString()}`);
     const data = Array.isArray(response.data) ? response.data : [];
 
     return {
@@ -2216,11 +2188,15 @@ function mapApiTrip(trip: ApiItinerary | ApiRoundTrip | ApiOpenJaw | ApiMultiCit
 }
 
 function buildBackendSearchRequest(params: TripSearchParams) {
+    return oneWaySearchRequest(params, params.origin, params.destination, params.departureDate);
+}
+
+function oneWaySearchRequest(params: TripSearchParams, originCode: string, destinationCode: string, departureDate: string) {
     const query = baseSearchQuery(params);
 
     if (params.includeNearbyAirports) {
-        const origin = airportByCode.get(params.origin);
-        const destination = airportByCode.get(params.destination);
+        const origin = airportByCode.get(originCode);
+        const destination = airportByCode.get(destinationCode);
 
         if (!origin || !destination) {
             throw new Error('Nearby search needs valid origin and destination airports.');
@@ -2230,7 +2206,7 @@ function buildBackendSearchRequest(params: TripSearchParams) {
         query.set('origin_longitude', String(origin.longitude));
         query.set('destination_latitude', String(destination.latitude));
         query.set('destination_longitude', String(destination.longitude));
-        query.set('departure_date', params.departureDate);
+        query.set('departure_date', departureDate);
         query.set('radius_km', String(params.nearbyRadiusKm));
 
         return {
@@ -2239,23 +2215,14 @@ function buildBackendSearchRequest(params: TripSearchParams) {
         };
     }
 
-    query.set('origin', params.origin);
-    query.set('destination', params.destination);
-    query.set('departure_date', params.departureDate);
+    query.set('origin', originCode);
+    query.set('destination', destinationCode);
+    query.set('departure_date', departureDate);
 
     return {
         endpoint: '/api/trips/search/one-way',
         query,
     };
-}
-
-function oneWaySearchQuery(params: TripSearchParams, origin: string, destination: string, departureDate: string) {
-    const query = baseSearchQuery(params);
-    query.set('origin', origin);
-    query.set('destination', destination);
-    query.set('departure_date', departureDate);
-
-    return query;
 }
 
 function baseSearchQuery(params: TripSearchParams) {
@@ -2414,9 +2381,7 @@ function searchTripsUnpaginated(params: TripSearchParams): Itinerary[] {
         return outbound.slice(0, MAX_RESULTS);
     }
 
-    const returnOrigin = params.differentReturnAirports ? params.returnOrigin : params.destination;
-    const finalDestination = params.differentReturnAirports ? params.finalDestination : params.origin;
-    const inbound = searchOneWay(returnOrigin, finalDestination, params.returnDate, params);
+    const inbound = searchOneWay(params.destination, params.origin, params.returnDate, params);
     const trips: Itinerary[] = [];
 
     outbound.slice(0, 12).forEach((outboundTrip) => {
@@ -2427,7 +2392,7 @@ function searchTripsUnpaginated(params: TripSearchParams): Itinerary[] {
 
             trips.push({
                 id: `rt-${outboundTrip.id}-${inboundTrip.id}`,
-                type: params.differentReturnAirports ? 'open_jaw' : 'round_trip',
+                type: 'round_trip',
                 origin: outboundTrip.origin,
                 destination: inboundTrip.destination,
                 departureAt: outboundTrip.departureAt,
@@ -2449,7 +2414,7 @@ function searchTripsUnpaginated(params: TripSearchParams): Itinerary[] {
         });
     });
 
-    return sortItineraries(trips, params.sort, params.airline).slice(0, MAX_RESULTS);
+    return sortItineraries(trips, params.sort).slice(0, MAX_RESULTS);
 }
 
 function paginateMockResults(results: Itinerary[], page: number): SearchResultSet {
@@ -2574,6 +2539,10 @@ function searchOneWay(origin: string, destination: string, date: string, params:
             : new Date(state.availableAfter.getTime() + MIN_LAYOVER_MINUTES * 60_000);
 
         for (const flight of flightsByOrigin.get(state.airport) ?? []) {
+            if (params.airline !== '' && flight.airline !== params.airline) {
+                continue;
+            }
+
             if (state.visited.has(flight.arrival_airport) && flight.arrival_airport !== destination) {
                 continue;
             }
@@ -2620,11 +2589,11 @@ function searchOneWay(origin: string, destination: string, date: string, params:
                 return (left.firstDeparture?.getTime() ?? 0) - (right.firstDeparture?.getTime() ?? 0);
             }
 
-            return itineraryRankScore(left, params.airline) - itineraryRankScore(right, params.airline);
+            return legBestScore(left) - legBestScore(right);
         });
     }
 
-    return sortItineraries(results, params.sort, params.airline);
+    return sortItineraries(results, params.sort);
 }
 
 function currentDuration(state: { firstDeparture: Date | null; availableAfter: Date }) {
@@ -2659,78 +2628,56 @@ function buildSegment(flight: Flight, localDepartureDate: string): Segment | nul
     };
 }
 
-function sortItineraries(results: Itinerary[], sort: SortKey, preferredAirline = '') {
+function sortItineraries(results: Itinerary[], sort: SortKey) {
     return [...results].sort((left, right) => {
         if (sort === 'best') {
-            return legBestScore(left, preferredAirline) - legBestScore(right, preferredAirline)
+            return legBestScore(left) - legBestScore(right)
                 || left.priceCents - right.priceCents
                 || left.durationMinutes - right.durationMinutes;
         }
 
         if (sort === 'departure') {
             return left.departureAt.getTime() - right.departureAt.getTime()
-                || itineraryRankScore(left, preferredAirline) - itineraryRankScore(right, preferredAirline);
+                || left.priceCents - right.priceCents;
         }
 
         if (sort === 'arrival') {
             return left.arrivalAt.getTime() - right.arrivalAt.getTime()
-                || itineraryRankScore(left, preferredAirline) - itineraryRankScore(right, preferredAirline);
+                || left.priceCents - right.priceCents;
         }
 
         if (sort === 'duration') {
             return left.durationMinutes - right.durationMinutes
-                || itineraryRankScore(left, preferredAirline) - itineraryRankScore(right, preferredAirline);
+                || left.priceCents - right.priceCents;
         }
 
         return left.priceCents - right.priceCents
-            || itineraryRankScore(left, preferredAirline) - itineraryRankScore(right, preferredAirline)
             || left.durationMinutes - right.durationMinutes;
     });
 }
 
-function sortLegOptions(options: Itinerary[], sort: LegSortKey, preferredAirline = '') {
+function sortLegOptions(options: Itinerary[], sort: LegSortKey) {
     return [...options].sort((left, right) => {
         if (sort === 'price') {
             return left.priceCents - right.priceCents
-                || left.durationMinutes - right.durationMinutes
-                || legBestScore(left, preferredAirline) - legBestScore(right, preferredAirline);
+                || left.durationMinutes - right.durationMinutes;
         }
 
         if (sort === 'time') {
             return left.durationMinutes - right.durationMinutes
-                || left.priceCents - right.priceCents
-                || legBestScore(left, preferredAirline) - legBestScore(right, preferredAirline);
+                || left.priceCents - right.priceCents;
         }
 
-        return legBestScore(left, preferredAirline) - legBestScore(right, preferredAirline)
+        return legBestScore(left) - legBestScore(right)
             || left.priceCents - right.priceCents
             || left.durationMinutes - right.durationMinutes;
     });
 }
 
-function legBestScore(itinerary: Itinerary, preferredAirline: string) {
-    const preferredSegments = preferredAirline === ''
-        ? 0
-        : itinerary.legs.reduce((count, leg) => (
-            count + leg.segments.filter((segment) => segment.airline.code === preferredAirline).length
-        ), 0);
-
+function legBestScore(itinerary: Itinerary) {
     return itinerary.priceCents
         + itinerary.durationMinutes * 35
-        + itinerary.stops * 7_500
-        - preferredSegments * 10_000;
-}
-
-function itineraryRankScore(itinerary: Itinerary, preferredAirline: string) {
-    if (preferredAirline === '') {
-        return itinerary.priceCents;
-    }
-
-    const preferredSegments = itinerary.legs.reduce((count, leg) => (
-        count + leg.segments.filter((segment) => segment.airline.code === preferredAirline).length
-    ), 0);
-
-    return Math.max(0, itinerary.priceCents - preferredSegments * 10_000);
+        + itinerary.stops * 7_500;
 }
 
 function zonedTimeToUtc(localDateTime: string, timeZone: string): Date {
@@ -2965,11 +2912,7 @@ function labelForSort(sort: SortKey) {
 
 function tripTypeLabel(params: TripSearchParams) {
     if (params.tripType === 'multi_city') {
-        return 'Multi-city';
-    }
-
-    if (params.tripType === 'round_trip' && params.differentReturnAirports) {
-        return 'Round trip with different return airports';
+        return 'Advanced';
     }
 
     if (params.tripType === 'round_trip') {

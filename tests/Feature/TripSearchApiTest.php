@@ -52,7 +52,7 @@ class TripSearchApiTest extends TestCase
         }
     }
 
-    public function test_preferred_airline_does_not_filter_out_database_routes(): void
+    public function test_airline_restriction_filters_database_routes(): void
     {
         $this->seedTripData();
 
@@ -60,8 +60,7 @@ class TripSearchApiTest extends TestCase
 
         $response
             ->assertOk()
-            ->assertJsonPath('data.0.destination', 'YYZ')
-            ->assertJsonPath('data.0.segments.0.airline', 'AC');
+            ->assertJsonCount(0, 'data');
     }
 
     public function test_search_results_can_be_paged_from_a_stored_search_session(): void

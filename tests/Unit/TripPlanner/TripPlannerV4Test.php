@@ -56,7 +56,7 @@ class TripPlannerV4Test extends TestCase
         $this->assertSame('100.00', $results[0]['total_price']);
     }
 
-    public function test_v4_preferred_airline_does_not_disable_mixed_airline_routes(): void
+    public function test_v4_airline_restriction_removes_mixed_airline_routes(): void
     {
         $planner = new TripPlannerV4($this->data([
             $this->airport('AAA'),
@@ -72,11 +72,10 @@ class TripPlannerV4Test extends TestCase
             'max_segments' => 2,
         ]);
 
-        $this->assertCount(1, $results);
-        $this->assertSame(['AC100', 'WS200'], array_column($results[0]['segments'], 'flight_number'));
+        $this->assertSame([], $results);
     }
 
-    public function test_v4_preferred_airline_affects_best_ranking_only(): void
+    public function test_v4_airline_restriction_only_returns_matching_segments(): void
     {
         $planner = new TripPlannerV4($this->data([
             $this->airport('AAA'),
@@ -86,22 +85,14 @@ class TripPlannerV4Test extends TestCase
             $this->flight('AC', '200', 'AAA', '08:30', 'BBB', '09:30', '140.00'),
         ]), new DateTimeImmutable('2026-04-29 00:00:00 UTC'));
 
-        $withoutPreference = $planner->searchOneWay('AAA', 'BBB', '2026-05-01', [
-            'max_results' => 2,
-            'sort' => 'best',
-        ]);
-        $withPreference = $planner->searchOneWay('AAA', 'BBB', '2026-05-01', [
+        $results = $planner->searchOneWay('AAA', 'BBB', '2026-05-01', [
             'airline' => 'AC',
             'max_results' => 2,
             'sort' => 'best',
         ]);
 
-        $this->assertSame('WS100', $withoutPreference[0]['segments'][0]['flight_number']);
-        $this->assertSame('AC200', $withPreference[0]['segments'][0]['flight_number']);
-        $this->assertSame(
-            ['AC200', 'WS100'],
-            array_map(fn (array $itinerary): string => $itinerary['segments'][0]['flight_number'], $withPreference),
-        );
+        $this->assertCount(1, $results);
+        $this->assertSame('AC200', $results[0]['segments'][0]['flight_number']);
     }
 
     #[Group('performance')]

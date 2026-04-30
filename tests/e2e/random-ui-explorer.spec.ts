@@ -19,14 +19,14 @@ type ReferenceData = {
     airlines: Airline[];
 };
 
-type TortureIssue = {
+type ExploratoryIssue = {
     kind: string;
     message: string;
 };
 
 type Random = () => number;
 
-const defaultSeed = 'flightjob-random-ui-torture';
+const defaultSeed = 'flightjob-random-ui-explorer';
 const randomSeed = process.env.RANDOM_SEED ?? defaultSeed;
 const randomRuns = Number(process.env.RANDOM_RUNS ?? 15);
 const searchTimeout = Number(process.env.RANDOM_SEARCH_TIMEOUT_MS ?? 60_000);
@@ -34,14 +34,14 @@ const flows = ['one-way', 'round-trip', 'open-jaw', 'nearby', 'multi-city'] as c
 
 test.describe.configure({ mode: 'serial' });
 
-test('randomly exercises trip search modes without crashing', async ({ page, request }, testInfo) => {
+test('explores randomized trip search modes without crashing @tool', async ({ page, request }, testInfo) => {
     test.setTimeout(Math.max(180_000, randomRuns * 45_000));
     testInfo.annotations.push({ type: 'seed', description: randomSeed });
     testInfo.annotations.push({ type: 'runs', description: String(randomRuns) });
 
     const random = createRandom(randomSeed);
     const referenceData = await loadReferenceData(request);
-    const issues: TortureIssue[] = [];
+    const issues: ExploratoryIssue[] = [];
     attachCrashGuards(page, issues);
 
     for (let run = 0; run < randomRuns; run++) {
@@ -52,7 +52,11 @@ test('randomly exercises trip search modes without crashing', async ({ page, req
 
         await test.step(`run ${run + 1}: ${flow}`, async () => {
             await page.setViewportSize(viewport);
+            const airportsResponse = page.waitForResponse((response) => response.url().endsWith('/api/airports') && response.status() === 200);
+            const airlinesResponse = page.waitForResponse((response) => response.url().endsWith('/api/airlines') && response.status() === 200);
+
             await page.goto('/');
+            await Promise.all([airportsResponse, airlinesResponse]);
             await expect(page.getByRole('button', { name: /^Search$/ })).toBeVisible();
 
             if (flow === 'one-way') {
@@ -123,7 +127,7 @@ async function loadReferenceData(request: APIRequestContext): Promise<ReferenceD
     return { airports, airlines };
 }
 
-function attachCrashGuards(page: Page, issues: TortureIssue[]) {
+function attachCrashGuards(page: Page, issues: ExploratoryIssue[]) {
     page.on('pageerror', (error) => {
         issues.push({ kind: 'pageerror', message: error.message });
     });
@@ -167,9 +171,8 @@ async function configureRoundTrip(page: Page, data: ReferenceData, random: Rando
 }
 
 async function configureOpenJaw(page: Page, data: ReferenceData, random: Random) {
-    await page.getByRole('button', { name: 'Round trip' }).click();
-    await expect(page.getByRole('button', { name: /choose return date/i })).toBeVisible();
-    await page.getByLabel('Different return airports').check();
+    await page.getByRole('button', { name: 'Advanced' }).click();
+    await ensureMultiLegCount(page, 2);
     const [origin, outboundDestination, returnOrigin, finalDestination] = pickDistinctAirports(data.airports, random, 4);
 
     await selectAirport(page, 0, origin, random);
@@ -192,12 +195,10 @@ async function configureNearby(page: Page, data: ReferenceData, random: Random) 
 }
 
 async function configureMultiCity(page: Page, data: ReferenceData, random: Random) {
-    await page.getByRole('button', { name: 'Multi-city' }).click();
+    await page.getByRole('button', { name: 'Advanced' }).click();
 
     const targetLegs = randomInt(random, 2, 5);
-    while (await page.locator('.multi-city-leg').count() < targetLegs) {
-        await page.getByRole('button', { name: /add flight/i }).click();
-    }
+    await ensureMultiLegCount(page, targetLegs);
 
     if (targetLegs > 2 && random() < 0.35) {
         await page.getByRole('button', { name: /remove flight/i }).last().click();
@@ -214,6 +215,12 @@ async function configureMultiCity(page: Page, data: ReferenceData, random: Rando
     const dateButtons = await page.getByRole('button', { name: /choose departure date/i }).count();
     for (let index = 0; index < dateButtons; index++) {
         await maybePickRandomDate(page, /choose departure date/i, random, index);
+    }
+}
+
+async function ensureMultiLegCount(page: Page, legCount: number) {
+    while (await page.locator('.multi-city-leg').count() < legCount) {
+        await page.getByRole('button', { name: /add flight/i }).click();
     }
 }
 
@@ -305,13 +312,10 @@ async function submitSearch(page: Page, expectedPath: string): Promise<Response>
 
 async function pokeResults(page: Page, random: Random) {
     if (await page.locator('.fare-tabs').isVisible().catch(() => false)) {
-        for (const label of shuffle(['Cheapest', 'Shortest', 'Flexible', 'Best'], random).slice(0, 2)) {
+        for (const label of shuffle(['Price', 'Time'], random)) {
             const tab = page.getByRole('button', { name: new RegExp(label, 'i') }).first();
-            if (await tab.isVisible()) {
-                const responsePromise = waitForAnySearch(page);
+            if (await tab.isVisible() && !await tab.evaluate((element) => element.classList.contains('active'))) {
                 await tab.click();
-                const response = await responsePromise;
-                expect(response.status()).toBeLessThan(500);
                 await waitForSearchToSettle(page);
             }
         }

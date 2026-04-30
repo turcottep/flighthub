@@ -5,7 +5,8 @@
     "scripts": {
         "build": "vite build",
         "dev": "vite",
-        "test:e2e": "playwright test",
+        "test:e2e": "playwright test --grep-invert @tool",
+        "test:e2e:tools": "playwright test --grep @tool",
         "test:e2e:ui": "playwright test --ui"
     },
     "devDependencies": {
