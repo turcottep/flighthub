@@ -31,9 +31,16 @@ class TripSearchController extends Controller
 
         $origin = strtoupper($validated['origin']);
         $destination = strtoupper($validated['destination']);
-        $this->locationAirportCodes($origin, 'origin');
-        $this->locationAirportCodes($destination, 'destination');
-        $planner = new TripPlannerV3($this->flightData->loadFromDatabase());
+        $originCodes = $this->locationAirportCodes($origin, 'origin');
+        $destinationCodes = $this->locationAirportCodes($destination, 'destination');
+        $maxSegments = (int) ($validated['max_segments'] ?? (
+            array_key_exists('max_stops', $validated)
+                ? ((int) $validated['max_stops']) + 1
+                : 5
+        ));
+        $planner = new TripPlannerV3($this->flightData->loadFromDatabaseForDepartures(
+            $this->flightData->departureAirportCodesBetweenLocationsFromDatabase($originCodes, $destinationCodes, $maxSegments),
+        ));
 
         return response()->json([
             'data' => $planner->searchOneWay(

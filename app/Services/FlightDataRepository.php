@@ -126,6 +126,91 @@ class FlightDataRepository
     }
 
     /**
+     * Return departure airport codes that can appear on a bounded path from origin to destination.
+     *
+     * @param list<string> $originAirportCodes
+     * @param list<string> $destinationAirportCodes
+     * @return list<string>
+     */
+    public function departureAirportCodesBetweenLocationsFromDatabase(array $originAirportCodes, array $destinationAirportCodes, int $maxSegments): array
+    {
+        $maxSegments = max(1, $maxSegments);
+        $originAirportCodes = array_values(array_unique(array_map('strtoupper', $originAirportCodes)));
+        $destinationAirportCodes = array_values(array_unique(array_map('strtoupper', $destinationAirportCodes)));
+        $canReachDestinationWithin = $this->airportCodesThatCanReachDestinationByDepth($destinationAirportCodes, $maxSegments);
+        $known = array_fill_keys($originAirportCodes, true);
+        $frontier = $originAirportCodes;
+        $departureAirportCodes = [];
+
+        for ($depth = 0; $depth < $maxSegments; $depth++) {
+            $remainingSegments = $maxSegments - $depth;
+
+            foreach ($frontier as $airportCode) {
+                if (isset($canReachDestinationWithin[$remainingSegments][$airportCode])) {
+                    $departureAirportCodes[$airportCode] = true;
+                }
+            }
+
+            if ($frontier === []) {
+                break;
+            }
+
+            $next = DB::table('flights')
+                ->whereIn('departure_airport_code', $frontier)
+                ->distinct()
+                ->pluck('arrival_airport_code')
+                ->all();
+
+            $frontier = [];
+            foreach ($next as $airportCode) {
+                if (! isset($known[$airportCode])) {
+                    $known[$airportCode] = true;
+                    $frontier[] = $airportCode;
+                }
+            }
+        }
+
+        return array_keys($departureAirportCodes);
+    }
+
+    /**
+     * @param list<string> $destinationAirportCodes
+     * @return array<int, array<string, true>>
+     */
+    private function airportCodesThatCanReachDestinationByDepth(array $destinationAirportCodes, int $maxSegments): array
+    {
+        $known = array_fill_keys($destinationAirportCodes, true);
+        $frontier = array_keys($known);
+        $byDepth = [0 => $known];
+
+        for ($depth = 1; $depth <= $maxSegments; $depth++) {
+            if ($frontier === []) {
+                $byDepth[$depth] = $known;
+
+                continue;
+            }
+
+            $previous = DB::table('flights')
+                ->whereIn('arrival_airport_code', $frontier)
+                ->distinct()
+                ->pluck('departure_airport_code')
+                ->all();
+
+            $frontier = [];
+            foreach ($previous as $airportCode) {
+                if (! isset($known[$airportCode])) {
+                    $known[$airportCode] = true;
+                    $frontier[] = $airportCode;
+                }
+            }
+
+            $byDepth[$depth] = $known;
+        }
+
+        return $byDepth;
+    }
+
+    /**
      * @return list<string>
      */
     public function nearbyAirportCodesFromDatabase(float $latitude, float $longitude, float $radiusKm): array
