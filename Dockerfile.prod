@@ -43,6 +43,7 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 COPY . .
 COPY --from=vendor /app/vendor ./vendor
 COPY --from=frontend /app/public/build ./public/build
+COPY docker/php/flighthub.ini /usr/local/etc/php/conf.d/zz-flighthub.ini
 COPY docker/nginx/prod.conf.template /etc/nginx/templates/default.conf.template
 COPY docker/app/start-prod.sh /usr/local/bin/start-prod
 
