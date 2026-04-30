@@ -878,13 +878,7 @@ function Layover({ previous, next }: { previous: Segment; next: Segment }) {
 }
 
 function AirlineLogo({ airlineCode }: { airlineCode: string }) {
-    const path = airlineCode === 'AC' ? '/example/flighthub_results_desktop_files/ACx2.png' : '';
-
-    if (!path) {
-        return <span className="logo-fallback">{airlineCode}</span>;
-    }
-
-    return <img className="airline-logo" src={path} alt={`${airlineCode} logo`} />;
+    return <span className="logo-fallback">{airlineCode}</span>;
 }
 
 async function searchTripsFromBackend(params: TripSearchParams): Promise<Itinerary[]> {
